@@ -1,0 +1,752 @@
+﻿[
+  {
+    "idx": 1,
+    "id": "prog_01_hello",
+    "category": "Fundamentals & Arithmetic",
+    "title": "Hello World & Personalized Welcome",
+    "inputs": "NONE",
+    "vars": "greeting=\"Welcome to Visual Programming!\"",
+    "outputs": "greeting, \"Happy coding and problem solving!\"",
+    "comments": "Welcome to Personalized Academic Learning"
+  },
+  {
+    "idx": 2,
+    "id": "prog_02_sum_two_nums",
+    "category": "Fundamentals & Arithmetic",
+    "title": "Sum and Difference of Two Numbers",
+    "inputs": "num1 (Enter first number:), num2 (Enter second number:)",
+    "vars": "sum_val=0, diff_val=0",
+    "outputs": "\"Sum = \" + sum_val, \"Difference = \" + diff_val",
+    "comments": "Read two numbers and compute sum & difference"
+  },
+  {
+    "idx": 3,
+    "id": "prog_03_swap_temp",
+    "category": "Fundamentals & Arithmetic",
+    "title": "Swap Two Variables (Using Temporary Store)",
+    "inputs": "NONE",
+    "vars": "a=15, b=30, temp=0",
+    "outputs": "\"Before: a = \" + a + \", b = \" + b, \"After Swap: a = \" + a + \", b = \" + b",
+    "comments": "Classical swap using temporary variable"
+  },
+  {
+    "idx": 4,
+    "id": "prog_04_swap_arithmetic",
+    "category": "Fundamentals & Arithmetic",
+    "title": "Swap Two Variables (Arithmetic In-Place)",
+    "inputs": "NONE",
+    "vars": "x=42, y=18",
+    "outputs": "\"In-place Swapped: x = \" + x + \", y = \" + y",
+    "comments": "In-place swap without third variable"
+  },
+  {
+    "idx": 5,
+    "id": "prog_05_simple_interest",
+    "category": "Fundamentals & Arithmetic",
+    "title": "Simple Interest & Final Amount Calculator",
+    "inputs": "NONE",
+    "vars": "principal=10000.0, rate=6.5, time_years=3.0, interest=0.0, total_amount=0.0",
+    "outputs": "\"Interest Earned: \" + interest, \"Total Maturity Amount: \" + total_amount",
+    "comments": "Calculate Simple Interest: SI = (P * R * T) / 100"
+  },
+  {
+    "idx": 6,
+    "id": "prog_06_celsius_fahrenheit",
+    "category": "Fundamentals & Arithmetic",
+    "title": "Temperature Converter (Celsius to Fahrenheit)",
+    "inputs": "celsius (Enter Celsius temperature:)",
+    "vars": "fahrenheit=0.0",
+    "outputs": "\"Temperature in Fahrenheit: \" + fahrenheit",
+    "comments": "Fahrenheit = (Celsius * 9.0 / 5.0) + 32.0"
+  },
+  {
+    "idx": 7,
+    "id": "prog_07_rectangle_metrics",
+    "category": "Fundamentals & Arithmetic",
+    "title": "Area and Perimeter of a Rectangle",
+    "inputs": "NONE",
+    "vars": "length=14.5, width=8.0, area=0.0, perimeter=0.0",
+    "outputs": "\"Rectangle Area: \" + area, \"Rectangle Perimeter: \" + perimeter",
+    "comments": "Rectangle metrics"
+  },
+  {
+    "idx": 8,
+    "id": "prog_08_circle_metrics",
+    "category": "Fundamentals & Arithmetic",
+    "title": "Area and Circumference of a Circle",
+    "inputs": "NONE",
+    "vars": "radius=7.0, pi_val=3.14159, circ_area=0.0, circumference=0.0",
+    "outputs": "\"Circle Area: \" + circ_area, \"Circumference: \" + circumference",
+    "comments": "Circle Area and Circumference with Pi = 3.14159"
+  },
+  {
+    "idx": 9,
+    "id": "prog_09_average_three_scores",
+    "category": "Fundamentals & Arithmetic",
+    "title": "Average and Sum of Three Academic Marks",
+    "inputs": "NONE",
+    "vars": "score1=85.0, score2=92.5, score3=78.0, total_score=0.0, avg_score=0.0",
+    "outputs": "\"Total Score: \" + total_score, \"Academic Average: \" + avg_score",
+    "comments": "Three subject scores average"
+  },
+  {
+    "idx": 10,
+    "id": "prog_10_seconds_to_hms",
+    "category": "Fundamentals & Arithmetic",
+    "title": "Seconds to Hours, Minutes, and Seconds Breakdown",
+    "inputs": "NONE",
+    "vars": "total_sec=3665, hours=0, mins=0, secs=0",
+    "outputs": "\"Time formatted: \" + hours + \"h \" + mins + \"m \" + secs + \"s\"",
+    "comments": "Breakdown total seconds into hours, minutes, seconds"
+  },
+  {
+    "idx": 11,
+    "id": "prog_11_even_odd",
+    "category": "Conditional Decision Making",
+    "title": "Even or Odd Parity Classifier",
+    "inputs": "n (Enter an integer:)",
+    "vars": "",
+    "outputs": "\"The number is EVEN\", \"The number is ODD\"",
+    "comments": "Check parity of N"
+  },
+  {
+    "idx": 12,
+    "id": "prog_12_positive_negative_zero",
+    "category": "Conditional Decision Making",
+    "title": "Positive, Negative, or Zero Tri-Branch",
+    "inputs": "num (Enter integer to inspect:)",
+    "vars": "",
+    "outputs": "\"Number is POSITIVE\", \"Number is NEGATIVE\", \"Number is ZERO\"",
+    "comments": "Sign determination"
+  },
+  {
+    "idx": 13,
+    "id": "prog_13_max_two_nums",
+    "category": "Conditional Decision Making",
+    "title": "Find Maximum of Two Numbers",
+    "inputs": "NONE",
+    "vars": "val1=45, val2=82, max_val=0",
+    "outputs": "\"Maximum value is: \" + max_val",
+    "comments": ""
+  },
+  {
+    "idx": 14,
+    "id": "prog_14_max_three_nums",
+    "category": "Conditional Decision Making",
+    "title": "Find Largest of Three Numbers",
+    "inputs": "NONE",
+    "vars": "a=72, b=95, c=41, largest=a",
+    "outputs": "\"Largest of the three is: \" + largest",
+    "comments": "Compare a, b, c using compound conditions"
+  },
+  {
+    "idx": 15,
+    "id": "prog_15_leap_year",
+    "category": "Conditional Decision Making",
+    "title": "Gregorian Leap Year Identifier",
+    "inputs": "year (Enter year (e.g. 2024):)",
+    "vars": "",
+    "outputs": "\"Leap Year: YES (366 days)\", \"Leap Year: NO (365 days)\"",
+    "comments": "Leap year: (year % 400 == 0) or (year % 4 == 0 and year % 100 != 0)"
+  },
+  {
+    "idx": 16,
+    "id": "prog_16_voting_eligibility",
+    "category": "Conditional Decision Making",
+    "title": "Voter Registration Age Verification",
+    "inputs": "candidate_age (Enter age in years:)",
+    "vars": "wait_years=18 - candidate_age",
+    "outputs": "\"Eligible to vote in civic elections.\", \"Not yet eligible. Years remaining: \" + wait_years",
+    "comments": ""
+  },
+  {
+    "idx": 17,
+    "id": "prog_17_grade_classifier",
+    "category": "Conditional Decision Making",
+    "title": "Academic Grade Point Classifier (A, B, C, F)",
+    "inputs": "percentage (Enter student marks (0-100):)",
+    "vars": "",
+    "outputs": "\"Grade: A+ (Outstanding Performance)\", \"Grade: A (Very Good)\", \"Grade: B (Satisfactory)\", \"Grade: C (Pass)\", \"Grade: F (Remedial Action Required)\"",
+    "comments": ""
+  },
+  {
+    "idx": 18,
+    "id": "prog_18_divisibility_5_and_11",
+    "category": "Conditional Decision Making",
+    "title": "Divisibility Validator (Divisible by 5 and 11)",
+    "inputs": "val (Enter number to test divisibility:)",
+    "vars": "",
+    "outputs": "\"Valid: Number is divisible by BOTH 5 and 11\", \"Invalid: Not simultaneously divisible by 5 and 11\"",
+    "comments": ""
+  },
+  {
+    "idx": 19,
+    "id": "prog_19_cartesian_quadrant",
+    "category": "Conditional Decision Making",
+    "title": "Cartesian Coordinate Quadrant Locator",
+    "inputs": "NONE",
+    "vars": "x_pos=5, y_pos=-3",
+    "outputs": "\"Point lies in Quadrant I (+, +)\", \"Point lies in Quadrant II (-, +)\", \"Point lies in Quadrant III (-, -)\", \"Point lies in Quadrant IV (+, -)\"",
+    "comments": ""
+  },
+  {
+    "idx": 20,
+    "id": "prog_20_triangle_validity",
+    "category": "Conditional Decision Making",
+    "title": "Triangle Inequality Theorem Check",
+    "inputs": "NONE",
+    "vars": "s1=7, s2=10, s3=5",
+    "outputs": "\"Valid Triangle: Inequality theorem satisfied\", \"Invalid Triangle: Sides cannot close a 2D triangle\"",
+    "comments": ""
+  },
+  {
+    "idx": 21,
+    "id": "prog_21_print_1_to_n",
+    "category": "Loops & Iterations",
+    "title": "Sequential Counting from 1 to N",
+    "inputs": "target (Enter upper bound N:)",
+    "vars": "",
+    "outputs": "\"Number: \" + i",
+    "comments": ""
+  },
+  {
+    "idx": 22,
+    "id": "prog_22_sum_natural_numbers",
+    "category": "Loops & Iterations",
+    "title": "Sum of First N Natural Numbers (Accumulator Pattern)",
+    "inputs": "n (Enter value of N:)",
+    "vars": "total_sum=0",
+    "outputs": "\"Sum of first \" + n + \" natural numbers = \" + total_sum",
+    "comments": ""
+  },
+  {
+    "idx": 23,
+    "id": "prog_23_factorial",
+    "category": "Loops & Iterations",
+    "title": "Factorial Computation of N (N!)",
+    "inputs": "n (Enter number for factorial:)",
+    "vars": "fact=1",
+    "outputs": "\"Factorial of \" + n + \" = \" + fact",
+    "comments": ""
+  },
+  {
+    "idx": 24,
+    "id": "prog_24_multiplication_table",
+    "category": "Loops & Iterations",
+    "title": "Mathematical Multiplication Table Generator",
+    "inputs": "table_num (Enter multiplication table number:)",
+    "vars": "prod=table_num * i",
+    "outputs": "table_num + \" x \" + i + \" = \" + prod",
+    "comments": ""
+  },
+  {
+    "idx": 25,
+    "id": "prog_25_countdown_blastoff",
+    "category": "Loops & Iterations",
+    "title": "Rocket Launch Countdown (While Loop Decrement)",
+    "inputs": "NONE",
+    "vars": "timer=10",
+    "outputs": "\"T-minus: \" + timer, \"LIFTOFF! System initialized successfully.\"",
+    "comments": ""
+  },
+  {
+    "idx": 26,
+    "id": "prog_26_sum_even_numbers",
+    "category": "Loops & Iterations",
+    "title": "Sum of Even Numbers up to N (Stepped Loop)",
+    "inputs": "limit (Enter upper limit N:)",
+    "vars": "even_sum=0",
+    "outputs": "\"Sum of even numbers = \" + even_sum",
+    "comments": ""
+  },
+  {
+    "idx": 27,
+    "id": "prog_27_sum_odd_numbers",
+    "category": "Loops & Iterations",
+    "title": "Sum of Odd Numbers up to N",
+    "inputs": "limit (Enter upper limit:)",
+    "vars": "odd_sum=0",
+    "outputs": "\"Sum of odd numbers = \" + odd_sum",
+    "comments": ""
+  },
+  {
+    "idx": 28,
+    "id": "prog_28_power_exponentiation",
+    "category": "Loops & Iterations",
+    "title": "Integer Exponentiation (Base^Exponent via Loop)",
+    "inputs": "NONE",
+    "vars": "base_val=3, exp_val=4, result=1",
+    "outputs": "base_val + \" ^ \" + exp_val + \" = \" + result",
+    "comments": ""
+  },
+  {
+    "idx": 29,
+    "id": "prog_29_fibonacci_series",
+    "category": "Loops & Iterations",
+    "title": "Fibonacci Sequence Generator (First N Terms)",
+    "inputs": "terms (Enter number of terms N:)",
+    "vars": "t1=0, t2=1, next_term=t1 + t2",
+    "outputs": "\"Term 1: \" + t1, \"Term 2: \" + t2, \"Term \" + i + \": \" + next_term",
+    "comments": ""
+  },
+  {
+    "idx": 30,
+    "id": "prog_30_harmonic_series",
+    "category": "Loops & Iterations",
+    "title": "Harmonic Series Summation (1 + 1/2 + 1/3 + ... + 1/N)",
+    "inputs": "NONE",
+    "vars": "n_terms=10, harmonic_sum=0.0",
+    "outputs": "\"Harmonic series sum = \" + harmonic_sum",
+    "comments": ""
+  },
+  {
+    "idx": 31,
+    "id": "prog_31_count_digits",
+    "category": "Number Theory & Digits",
+    "title": "Count Number of Digits in an Integer",
+    "inputs": "num (Enter positive integer:)",
+    "vars": "digit_count=0, temp_n=num",
+    "outputs": "\"Number of digits: \" + digit_count",
+    "comments": ""
+  },
+  {
+    "idx": 32,
+    "id": "prog_32_sum_of_digits",
+    "category": "Number Theory & Digits",
+    "title": "Sum of Digits of an Integer",
+    "inputs": "val (Enter number:)",
+    "vars": "digit_sum=0, cur=val",
+    "outputs": "\"Sum of digits = \" + digit_sum",
+    "comments": ""
+  },
+  {
+    "idx": 33,
+    "id": "prog_33_reverse_number",
+    "category": "Number Theory & Digits",
+    "title": "Reverse Digits of an Integer",
+    "inputs": "num (Enter integer to reverse:)",
+    "vars": "rev=0, rem=0, n_copy=num",
+    "outputs": "\"Reversed integer = \" + rev",
+    "comments": ""
+  },
+  {
+    "idx": 34,
+    "id": "prog_34_palindrome_number",
+    "category": "Number Theory & Digits",
+    "title": "Palindrome Number Verification",
+    "inputs": "n (Enter number to test for Palindrome:)",
+    "vars": "rev=0, orig=n",
+    "outputs": "\"Result: PALINDROME (Identical in reverse)\", \"Result: NOT a palindrome\"",
+    "comments": ""
+  },
+  {
+    "idx": 35,
+    "id": "prog_35_armstrong_number",
+    "category": "Number Theory & Digits",
+    "title": "Armstrong Number Checker (Narcissistic Number)",
+    "inputs": "n (Enter 3-digit number (e.g. 153, 370):)",
+    "vars": "sum_cubes=0, temp=n, d=0",
+    "outputs": "\"YES: \" + n + \" is an Armstrong number!\", \"NO: \" + n + \" is not an Armstrong number.\"",
+    "comments": ""
+  },
+  {
+    "idx": 36,
+    "id": "prog_36_prime_number_check",
+    "category": "Number Theory & Digits",
+    "title": "Prime Number Primality Test",
+    "inputs": "n (Enter positive integer > 1:)",
+    "vars": "is_prime=1",
+    "outputs": "n + \" is a PRIME number\", n + \" is COMPOSITE / Not Prime\"",
+    "comments": ""
+  },
+  {
+    "idx": 37,
+    "id": "prog_37_gcd_euclidean",
+    "category": "Number Theory & Digits",
+    "title": "Greatest Common Divisor (Euclidean Algorithm)",
+    "inputs": "NONE",
+    "vars": "a=48, b=18, r=0",
+    "outputs": "\"GCD = \" + a",
+    "comments": ""
+  },
+  {
+    "idx": 38,
+    "id": "prog_38_lcm_computation",
+    "category": "Number Theory & Digits",
+    "title": "Least Common Multiple (LCM via GCD Relationship)",
+    "inputs": "NONE",
+    "vars": "n1=12, n2=18, a_copy=n1, b_copy=n2, rem=0, gcd_val=a_copy, lcm_val=(n1 * n2) / gcd_val",
+    "outputs": "\"LCM of \" + n1 + \" and \" + n2 + \" = \" + lcm_val",
+    "comments": ""
+  },
+  {
+    "idx": 39,
+    "id": "prog_39_perfect_number",
+    "category": "Number Theory & Digits",
+    "title": "Perfect Number Checker (Sum of Proper Divisors)",
+    "inputs": "test_n (Enter number to test (e.g. 6, 28):)",
+    "vars": "divisor_sum=0",
+    "outputs": "test_n + \" is a PERFECT NUMBER!\", test_n + \" is not a perfect number.\"",
+    "comments": ""
+  },
+  {
+    "idx": 40,
+    "id": "prog_40_factors_of_number",
+    "category": "Number Theory & Digits",
+    "title": "Enumerate All Divisors and Factors of N",
+    "inputs": "num (Enter integer to factor:)",
+    "vars": "",
+    "outputs": "\"Divisors of \" + num + \":\", \"Factor: \" + i",
+    "comments": ""
+  },
+  {
+    "idx": 41,
+    "id": "prog_41_array_sum_avg",
+    "category": "Arrays & Sequences",
+    "title": "Array Sum and Mathematical Mean",
+    "inputs": "NONE",
+    "vars": "size=5, acc=0, elem=idx * 10",
+    "outputs": "\"Cumulative Array Sum = \" + acc, \"Array Mean = \" + (acc / size)",
+    "comments": ""
+  },
+  {
+    "idx": 42,
+    "id": "prog_42_find_max_element",
+    "category": "Arrays & Sequences",
+    "title": "Find Maximum Element in Sequence",
+    "inputs": "NONE",
+    "vars": "max_seen=0, curr_val=(k * 17) % 31",
+    "outputs": "\"Inspecting element: \" + curr_val, \"Global Maximum Element: \" + max_seen",
+    "comments": ""
+  },
+  {
+    "idx": 43,
+    "id": "prog_43_find_min_element",
+    "category": "Arrays & Sequences",
+    "title": "Find Minimum Element in Sequence",
+    "inputs": "NONE",
+    "vars": "min_seen=999, val=(idx * 37) % 50",
+    "outputs": "\"Global Minimum Element: \" + min_seen",
+    "comments": ""
+  },
+  {
+    "idx": 44,
+    "id": "prog_44_count_even_odd_elements",
+    "category": "Arrays & Sequences",
+    "title": "Count Even and Odd Elements in Stream",
+    "inputs": "NONE",
+    "vars": "even_cnt=0, odd_cnt=0, item=i * 3",
+    "outputs": "\"Even element count: \" + even_cnt, \"Odd element count: \" + odd_cnt",
+    "comments": ""
+  },
+  {
+    "idx": 45,
+    "id": "prog_45_linear_search",
+    "category": "Arrays & Sequences",
+    "title": "Linear Search in Array",
+    "inputs": "NONE",
+    "vars": "target_key=21, found_at=-1, item=pos * 7",
+    "outputs": "\"Target \" + target_key + \" found at position: \" + found_at, \"Target not found in sequence.\"",
+    "comments": ""
+  },
+  {
+    "idx": 46,
+    "id": "prog_46_binary_search_logic",
+    "category": "Arrays & Sequences",
+    "title": "Binary Search Logic (Divide & Conquer)",
+    "inputs": "NONE",
+    "vars": "low=1, high=100, target=42, found_step=0, mid=(low + high) / 2",
+    "outputs": "\"Found target \" + target + \" at mid: \" + mid + \" in \" + found_step + \" steps!\"",
+    "comments": ""
+  },
+  {
+    "idx": 47,
+    "id": "prog_47_frequency_counter",
+    "category": "Arrays & Sequences",
+    "title": "Occurrence Frequency Counter",
+    "inputs": "NONE",
+    "vars": "query=3, occurrences=0, val=i % 4",
+    "outputs": "\"Frequency of value \" + query + \" = \" + occurrences",
+    "comments": ""
+  },
+  {
+    "idx": 48,
+    "id": "prog_48_check_sorted_ascending",
+    "category": "Arrays & Sequences",
+    "title": "Check if Sequence is Sorted Ascending",
+    "inputs": "NONE",
+    "vars": "is_sorted=1, prev=0, curr=idx * 5",
+    "outputs": "\"Sequence is strictly MONOTONIC ASCENDING\", \"Sequence is NOT sorted\"",
+    "comments": ""
+  },
+  {
+    "idx": 49,
+    "id": "prog_49_second_largest",
+    "category": "Arrays & Sequences",
+    "title": "Second Largest Element in Sequence",
+    "inputs": "NONE",
+    "vars": "first_max=-1, second_max=-1, val=(i * 23) % 40",
+    "outputs": "\"1st Largest: \" + first_max, \"2nd Largest: \" + second_max",
+    "comments": ""
+  },
+  {
+    "idx": 50,
+    "id": "prog_50_cumulative_prefix_sum",
+    "category": "Arrays & Sequences",
+    "title": "Prefix Sum Array Transformation",
+    "inputs": "NONE",
+    "vars": "prefix_acc=0, curr_elem=idx * 4",
+    "outputs": "\"Prefix sum at index \" + idx + \": \" + prefix_acc",
+    "comments": ""
+  },
+  {
+    "idx": 51,
+    "id": "prog_51_bubble_sort_pass",
+    "category": "Searching & Sorting",
+    "title": "Bubble Sort (Single Pass Pairwise Comparison)",
+    "inputs": "NONE",
+    "vars": "swapped_count=0, left=10 - j, right=5",
+    "outputs": "\"Swap needed between \" + left + \" and \" + right, \"Pass completed. Swaps performed: \" + swapped_count",
+    "comments": "Bubble sort pass logic"
+  },
+  {
+    "idx": 52,
+    "id": "prog_52_selection_sort_min_finder",
+    "category": "Searching & Sorting",
+    "title": "Selection Sort (Find Minimum Index for Swap)",
+    "inputs": "NONE",
+    "vars": "min_idx=1, min_val=99, score=(curr * 29) % 37",
+    "outputs": "\"Smallest element is \" + min_val + \" at index \" + min_idx",
+    "comments": ""
+  },
+  {
+    "idx": 53,
+    "id": "prog_53_insertion_sort_shift",
+    "category": "Searching & Sorting",
+    "title": "Insertion Sort (Inner Shift Simulation)",
+    "inputs": "NONE",
+    "vars": "key=14, j=4",
+    "outputs": "\"Shifting element at index \" + j + \" to position \" + (j + 1), \"Key \" + key + \" successfully inserted at slot 1\"",
+    "comments": ""
+  },
+  {
+    "idx": 54,
+    "id": "prog_54_two_pointer_pair_sum",
+    "category": "Searching & Sorting",
+    "title": "Two-Pointer Sorted Pair Target Sum",
+    "inputs": "NONE",
+    "vars": "left_ptr=1, right_ptr=10, target_sum=11, current_sum=left_ptr + right_ptr",
+    "outputs": "\"Pair found: (\" + left_ptr + \", \" + right_ptr + \") sums to \" + target_sum",
+    "comments": ""
+  },
+  {
+    "idx": 55,
+    "id": "prog_55_sentinel_linear_search",
+    "category": "Searching & Sorting",
+    "title": "Sentinel Linear Search (Loop Condition Optimization)",
+    "inputs": "NONE",
+    "vars": "target=25, idx=1",
+    "outputs": "\"Sentinel matched at position: \" + idx",
+    "comments": ""
+  },
+  {
+    "idx": 56,
+    "id": "prog_56_merge_sorted_sequences",
+    "category": "Searching & Sorting",
+    "title": "Merge Two Sorted Sequences (Merge Step)",
+    "inputs": "NONE",
+    "vars": "p1=1, p2=1, val1=p1 * 3, val2=p2 * 2",
+    "outputs": "\"Outputting from Stream 1: \" + val1, \"Outputting from Stream 2: \" + val2",
+    "comments": ""
+  },
+  {
+    "idx": 57,
+    "id": "prog_57_binary_search_range",
+    "category": "Searching & Sorting",
+    "title": "Binary Search First Occurrence Index",
+    "inputs": "NONE",
+    "vars": "low=1, high=16, ans=-1, target=8, mid=(low + high) / 2",
+    "outputs": "\"First occurrence bound index: \" + ans",
+    "comments": ""
+  },
+  {
+    "idx": 58,
+    "id": "prog_58_counting_sort_bucket",
+    "category": "Searching & Sorting",
+    "title": "Counting Sort Frequency Array Tally",
+    "inputs": "NONE",
+    "vars": "bucket_zero=0, bucket_one=0, val=item_idx % 2",
+    "outputs": "\"Bucket 0 Count: \" + bucket_zero, \"Bucket 1 Count: \" + bucket_one",
+    "comments": ""
+  },
+  {
+    "idx": 59,
+    "id": "prog_59_square_grid_pattern",
+    "category": "Patterns & Visual Geometry",
+    "title": "Square Grid Star Matrix Pattern (N x N)",
+    "inputs": "NONE",
+    "vars": "grid_size=4",
+    "outputs": "\"* * * * (Row \" + row + \")\"",
+    "comments": ""
+  },
+  {
+    "idx": 60,
+    "id": "prog_60_right_triangle_pattern",
+    "category": "Patterns & Visual Geometry",
+    "title": "Right-Angled Triangle Star Pattern",
+    "inputs": "rows (Enter number of rows:)",
+    "vars": "line=\"\"",
+    "outputs": "line",
+    "comments": ""
+  },
+  {
+    "idx": 61,
+    "id": "prog_61_inverted_triangle_pattern",
+    "category": "Patterns & Visual Geometry",
+    "title": "Inverted Right-Angled Triangle Pattern",
+    "inputs": "NONE",
+    "vars": "max_rows=5, stars_in_row=max_rows - r + 1",
+    "outputs": "\"Row \" + r + \": Count = \" + stars_in_row",
+    "comments": ""
+  },
+  {
+    "idx": 62,
+    "id": "prog_62_number_triangle_pattern",
+    "category": "Patterns & Visual Geometry",
+    "title": "Number Triangle Pattern (1, 12, 123...)",
+    "inputs": "NONE",
+    "vars": "n_rows=4, row_text=\"\"",
+    "outputs": "row_text",
+    "comments": ""
+  },
+  {
+    "idx": 63,
+    "id": "prog_63_floyds_triangle",
+    "category": "Patterns & Visual Geometry",
+    "title": "Floyd's Triangle of Consecutive Natural Numbers",
+    "inputs": "NONE",
+    "vars": "counter=1, row_str=\"\"",
+    "outputs": "row_str",
+    "comments": ""
+  },
+  {
+    "idx": 64,
+    "id": "prog_64_pyramid_star_pattern",
+    "category": "Patterns & Visual Geometry",
+    "title": "Symmetric Centered Pyramid Star Pattern",
+    "inputs": "NONE",
+    "vars": "height=5, spaces=height - r, stars=(2 * r) - 1",
+    "outputs": "\"Level \" + r + \": Spaces=\" + spaces + \", Stars=\" + stars",
+    "comments": ""
+  },
+  {
+    "idx": 65,
+    "id": "prog_65_diamond_geometry",
+    "category": "Patterns & Visual Geometry",
+    "title": "Diamond Star Pattern Structure",
+    "inputs": "NONE",
+    "vars": "",
+    "outputs": "\"Top row \" + top_r + \" width: \" + (2 * top_r - 1), \"Bottom row \" + bot_r + \" width: \" + (2 * bot_r - 1)",
+    "comments": "Top half of diamond, Bottom inverted half"
+  },
+  {
+    "idx": 66,
+    "id": "prog_66_checkerboard_pattern",
+    "category": "Patterns & Visual Geometry",
+    "title": "Binary Checkerboard Matrix (0 and 1 Alternating)",
+    "inputs": "NONE",
+    "vars": "row_line=\"\"",
+    "outputs": "row_line",
+    "comments": ""
+  },
+  {
+    "idx": 67,
+    "id": "prog_67_hollow_rectangle",
+    "category": "Patterns & Visual Geometry",
+    "title": "Hollow Rectangle Perimeter Boundary",
+    "inputs": "NONE",
+    "vars": "H=4, W=5",
+    "outputs": "\"* * * * * (Solid Edge)\", \"*       * (Hollow Inner)\"",
+    "comments": ""
+  },
+  {
+    "idx": 68,
+    "id": "prog_68_pascals_triangle_row",
+    "category": "Patterns & Visual Geometry",
+    "title": "Pascal's Triangle Row Coefficient Multipliers",
+    "inputs": "NONE",
+    "vars": "n=5, coeff=1",
+    "outputs": "\"Pascal Row 5, Term 0: \" + coeff, \"Pascal Row 5, Term \" + k + \": \" + coeff",
+    "comments": ""
+  },
+  {
+    "idx": 69,
+    "id": "prog_69_decimal_to_binary",
+    "category": "Practical Math & Conversions",
+    "title": "Decimal to Binary Converter (Radix 2)",
+    "inputs": "decimal_val (Enter decimal integer (e.g. 19):)",
+    "vars": "binary_str=\"\", temp_d=decimal_val, bit=temp_d % 2",
+    "outputs": "\"Binary representation: \" + binary_str",
+    "comments": ""
+  },
+  {
+    "idx": 70,
+    "id": "prog_70_binary_to_decimal",
+    "category": "Practical Math & Conversions",
+    "title": "Binary to Decimal Converter (Base 2 to 10)",
+    "inputs": "NONE",
+    "vars": "bin_num=1011, dec_result=0, weight=1, temp_bin=bin_num, last_bit=temp_bin % 10",
+    "outputs": "\"Decimal equivalent of \" + bin_num + \" = \" + dec_result",
+    "comments": ""
+  },
+  {
+    "idx": 71,
+    "id": "prog_71_square_root_approximation",
+    "category": "Practical Math & Conversions",
+    "title": "Square Root via Babylonian Newton-Raphson Method",
+    "inputs": "NONE",
+    "vars": "target_s=25.0, approx=25.0 / 2.0",
+    "outputs": "\"Iteration \" + iter + \": guess = \" + approx, \"Final Square Root approximation: \" + approx",
+    "comments": ""
+  },
+  {
+    "idx": 72,
+    "id": "prog_72_absolute_value",
+    "category": "Practical Math & Conversions",
+    "title": "Absolute Value Function (Branchless & Branching)",
+    "inputs": "val (Enter any positive or negative integer:)",
+    "vars": "abs_val=val",
+    "outputs": "\"Absolute value |\" + val + \"| = \" + abs_val",
+    "comments": ""
+  },
+  {
+    "idx": 73,
+    "id": "prog_73_collatz_conjecture",
+    "category": "Practical Math & Conversions",
+    "title": "Collatz Conjecture 3n + 1 Sequence Simulator",
+    "inputs": "seed (Enter starting integer n > 1:)",
+    "vars": "steps=0, curr_val=seed",
+    "outputs": "\"Step \" + steps + \": value = \" + curr_val, \"Sequence reached 1 in \" + steps + \" total transitions!\"",
+    "comments": ""
+  },
+  {
+    "idx": 74,
+    "id": "prog_74_gcd_three_numbers",
+    "category": "Practical Math & Conversions",
+    "title": "Greatest Common Divisor of Three Numbers",
+    "inputs": "NONE",
+    "vars": "x=24, y=36, z=60, r1=0, r2=0",
+    "outputs": "\"Global GCD of the three numbers is: \" + x",
+    "comments": "x now holds GCD(x, y). Now compute GCD(x, z)"
+  },
+  {
+    "idx": 75,
+    "id": "prog_75_atm_cash_dispenser",
+    "category": "Practical Math & Conversions",
+    "title": "ATM Cash Withdrawal Currency Note Dispenser",
+    "inputs": "amount (Enter withdrawal amount in multiple of 50:)",
+    "vars": "notes_500=amount / 500, rem_amt=amount % 500, notes_200=rem_amt / 200, notes_100=rem_amt / 100, notes_50=rem_amt / 50",
+    "outputs": "\"500 Notes: \" + notes_500, \"200 Notes: \" + notes_200, \"100 Notes: \" + notes_100, \"50 Notes: \" + notes_50",
+    "comments": ""
+  }
+]

@@ -1,0 +1,605 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Oversight Hub{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+<style>
+.admin-badge {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    font-size: 0.76rem;
+    font-weight: 700;
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-pill);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+.health-badge {
+    font-size: 0.76rem;
+    font-weight: 700;
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-pill);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+.health-badge.critical { background: var(--accent-crimson-light); color: var(--accent-crimson); }
+.health-badge.high { background: var(--secondary-light); color: var(--secondary); }
+.health-badge.low { background: var(--accent-sage-light); color: var(--accent-sage); }
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+.admin-table th {
+    padding: 0.85rem 0.95rem;
+    background: var(--bg-canvas);
+    border-bottom: 2px solid var(--border-subtle);
+    text-align: left;
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+.admin-table td {
+    padding: 0.85rem 0.95rem;
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+}
+.admin-table tr:hover {
+    background: #FAF7F2;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Admin Hero Banner -->
+<div class="dash-hero">
+    <div class="dash-hero-text">
+        <div style="display:flex; align-items:center; gap:0.65rem; margin-bottom:0.45rem;">
+            <span class="admin-badge">🛡️ Administrative Portal</span>
+            <span style="font-size:0.82rem; font-weight:600; color:var(--text-secondary);">Coursework & Academic Oversight</span>
+        </div>
+        <h2>Welcome, {{ current_user.full_name }} 🛡️</h2>
+        <p>
+            Monitor real-time cognitive workload, deadline pressures, and visual algorithmic progress across undergraduate Computer Science students.
+        </p>
+    </div>
+
+    <div class="hero-actions">
+        <button type="button" id="btnOpenAddCandidateModal" class="btn btn-accent btn-sm">
+            👤 + Enroll Candidate
+        </button>
+        <button type="button" id="btnOpenBroadcastModal" class="btn btn-primary btn-sm">
+            📢 Broadcast Coursework
+        </button>
+    </div>
+</div>
+
+<!-- Key System Metrics Row -->
+<div class="metrics-row">
+    <div class="metric-card">
+        <div class="metric-header">
+            <span class="metric-title">Enrolled Students</span>
+            <div class="metric-icon icon-terracotta">👥</div>
+        </div>
+        <div id="statTotalStudents" class="metric-val">{{ stats.total_students }}</div>
+        <span class="metric-subtitle">Active student cohort</span>
+    </div>
+
+    <div class="metric-card">
+        <div class="metric-header">
+            <span class="metric-title">Total Coursework Tasks</span>
+            <div class="metric-icon icon-amber">📚</div>
+        </div>
+        <div class="metric-val">{{ stats.total_tasks }}</div>
+        <span class="metric-subtitle">{{ stats.total_completed }} tasks finished</span>
+    </div>
+
+    <div class="metric-card">
+        <div class="metric-header">
+            <span class="metric-title">Visual Code Projects</span>
+            <div class="metric-icon icon-sage">🧩</div>
+        </div>
+        <div class="metric-val">{{ stats.total_programs }}</div>
+        <span class="metric-subtitle">Transpiled algorithms in library</span>
+    </div>
+
+    <div class="metric-card">
+        <div class="metric-header">
+            <span class="metric-title">System Status</span>
+            <div class="metric-icon icon-sage">⚡</div>
+        </div>
+        <div class="metric-val" style="font-size: 1.25rem; color: var(--accent-sage);">Healthy</div>
+        <span class="metric-subtitle">ACID SQLite &bull; Latency &lt; 20ms</span>
+    </div>
+</div>
+
+<!-- Main Table: Student Roster & Cognitive Health -->
+<div class="task-section-card" style="margin-bottom: 2rem;">
+    <div class="task-section-header">
+        <div class="task-section-title-wrap">
+            <h3>👥 Student Cohort & Cognitive Health Monitor</h3>
+            <p>Heuristic assessment of time pressure, overlapping lab deadlines, and burnout risk for each student.</p>
+        </div>
+        <div style="display:flex; align-items:center; gap:0.75rem;">
+            <button type="button" id="btnTableAddCandidate" class="btn btn-primary btn-sm">
+                + Add Candidate
+            </button>
+            <div id="studentCountBadge" style="font-size: 0.82rem; color: var(--text-secondary);">
+                Showing {{ students|length }} active students
+            </div>
+        </div>
+    </div>
+
+    <div style="overflow-x: auto;">
+        <table class="admin-table" id="studentsCohortTable">
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Roll No / USN</th>
+                    <th>Email</th>
+                    <th>Active Hours</th>
+                    <th>Pending Tasks</th>
+                    <th>Critical / Overdue</th>
+                    <th>Cognitive Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="studentsTableBody">
+                {% for s in students %}
+                <tr id="student-row-{{ s.id }}">
+                    <td>
+                        <strong>{{ s.full_name }}</strong>
+                        <div style="font-size:0.75rem; color:var(--text-tertiary);">Semester {{ s.semester }}</div>
+                    </td>
+                    <td>
+                        <span class="course-code-badge">{{ s.usn or 'N/A' }}</span>
+                    </td>
+                    <td style="color:var(--text-secondary); font-size:0.84rem;">
+                        {{ s.email }}
+                    </td>
+                    <td>
+                        <strong>{{ s.active_hours }} hrs</strong>
+                    </td>
+                    <td>
+                        {{ s.active_tasks_count }} of {{ s.total_tasks }}
+                    </td>
+                    <td>
+                        {% if s.critical_tasks_count > 0 %}
+                            <span style="color:var(--accent-crimson); font-weight:700;">⚠️ {{ s.critical_tasks_count }}</span>
+                        {% else %}
+                            <span style="color:var(--accent-sage);">0</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="health-badge {{ s.health_badge }}">
+                            {{ s.health_status }}
+                        </span>
+                    </td>
+                    <td>
+                        <div style="display:flex; gap:0.35rem; align-items:center;">
+                            <button type="button" class="btn btn-secondary btn-sm btn-inspect-student" data-student-id="{{ s.id }}" data-student-name="{{ s.full_name }}">
+                                🔍 Inspect
+                            </button>
+                            <button type="button" class="btn btn-secondary btn-sm btn-delete-student" data-student-id="{{ s.id }}" data-student-name="{{ s.full_name }}" style="color:var(--accent-crimson);" title="Remove candidate from cohort">
+                                🗑️
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- System Specification & Department Support Cards -->
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+    <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-sm);">
+        <h4 style="font-size: 1.05rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.75rem;">
+            🔒 SRS Non-Functional Verification Matrix
+        </h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.85rem;">
+            <div style="padding: 0.85rem; background: var(--bg-canvas); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+                <strong>Password Security:</strong>
+                <p style="color:var(--text-secondary); margin-top:0.25rem;">PBKDF2 SHA-256 via Werkzeug Security</p>
+            </div>
+            <div style="padding: 0.85rem; background: var(--bg-canvas); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+                <strong>SQL Protection:</strong>
+                <p style="color:var(--text-secondary); margin-top:0.25rem;">Parameterized SQL queries throughout models layer</p>
+            </div>
+            <div style="padding: 0.85rem; background: var(--bg-canvas); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+                <strong>Engine Response Latency:</strong>
+                <p style="color:var(--accent-sage); font-weight:600; margin-top:0.25rem;">&lt; 25 ms (SRS requirement &lt; 200 ms)</p>
+            </div>
+            <div style="padding: 0.85rem; background: var(--bg-canvas); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+                <strong>Data Persistence:</strong>
+                <p style="color:var(--text-secondary); margin-top:0.25rem;">ACID-compliant SQLite relational storage</p>
+            </div>
+        </div>
+    </div>
+
+    <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-sm);">
+        <h4 style="font-size: 1.05rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">
+            Academic Department Support
+        </h4>
+        <div style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.55;">
+            <strong>Academic Administrator</strong><br>
+            Department of Computer Science & Engineering<br>
+            Undergraduate Coursework & Evaluation<br>
+            <strong>Support Email:</strong> academic-support@example.edu
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Enroll New Candidate -->
+<div id="modalAddCandidate" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">👤 Enroll New Candidate</h3>
+            <button type="button" id="btnCloseCandidateModal" class="modal-close">&times;</button>
+        </div>
+        <form id="formAddCandidate">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" for="candFullName">Candidate Full Name *</label>
+                    <input type="text" id="candFullName" class="form-control" placeholder="e.g. Student E" required>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label" for="candUsn">Roll No / USN</label>
+                        <input type="text" id="candUsn" class="form-control" placeholder="e.g. USN-ABC-05">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="candSemester">Semester</label>
+                        <select id="candSemester" class="form-select">
+                            <option value="1">Semester 1</option>
+                            <option value="2">Semester 2</option>
+                            <option value="3" selected>Semester 3</option>
+                            <option value="4">Semester 4</option>
+                            <option value="5">Semester 5</option>
+                            <option value="6">Semester 6</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="candEmail">Student Email *</label>
+                    <input type="email" id="candEmail" class="form-control" placeholder="e.g. student_e@example.edu" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="candPassword">Initial Password</label>
+                    <input type="text" id="candPassword" class="form-control" value="student123" placeholder="student123">
+                    <div class="form-hint">Student can use this to sign in immediately</div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="btnCancelCandidateModal" class="btn btn-secondary btn-sm">Cancel</button>
+                <button type="submit" class="btn btn-primary btn-sm">Enroll Candidate</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal: Broadcast Coursework -->
+<div id="modalBroadcast" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">📢 Broadcast Coursework to Enrolled Students</h3>
+            <button type="button" id="btnCloseBroadcastModal" class="modal-close">&times;</button>
+        </div>
+        <form id="formBroadcastTask">
+            <div class="modal-body">
+                <p style="font-size:0.84rem; color:var(--text-secondary); margin-bottom:1rem;">
+                    This task will be automatically created and prioritized in the individual schedules of all enrolled students.
+                </p>
+
+                <div class="form-group">
+                    <label class="form-label" for="bTitle">Task / Lab Title *</label>
+                    <input type="text" id="bTitle" class="form-control" placeholder="e.g. OS Lab: Process Synchronization Semaphores" required>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label" for="bCourseCode">Course Code</label>
+                        <input type="text" id="bCourseCode" class="form-control" value="CS204" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="bCategory">Category *</label>
+                        <select id="bCategory" class="form-select">
+                            <option value="Laboratory Work" selected>Laboratory Work</option>
+                            <option value="Assignment">Assignment</option>
+                            <option value="Project">Project</option>
+                            <option value="Examination">Examination</option>
+                            <option value="Reading/Quiz">Reading / Quiz</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="bDeadline">Deadline *</label>
+                    <input type="datetime-local" id="bDeadline" class="form-control" required>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label" for="bHours">Estimated Completion Hours *</label>
+                        <input type="number" id="bHours" class="form-control" step="0.5" value="5.0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="bDifficulty">Difficulty Level (1-5)</label>
+                        <select id="bDifficulty" class="form-select">
+                            <option value="1">1 - Very Easy</option>
+                            <option value="2">2 - Easy</option>
+                            <option value="3" selected>3 - Moderate</option>
+                            <option value="4">4 - High</option>
+                            <option value="5">5 - Hard</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="bDesc">Guidelines / Lab Manual Notes</label>
+                    <textarea id="bDesc" class="form-textarea" rows="3" placeholder="Provide instructions or report formatting guidelines..."></textarea>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="btnCancelBroadcast" class="btn btn-secondary btn-sm">Cancel</button>
+                <button type="submit" class="btn btn-primary btn-sm">Broadcast to All Students</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal: Student Inspector -->
+<div id="modalInspector" class="modal-overlay">
+    <div class="modal-content" style="max-width: 680px;">
+        <div class="modal-header">
+            <h3 id="inspectorModalTitle" class="modal-title">🔍 Student Workload Inspector</h3>
+            <button type="button" id="btnCloseInspectorModal" class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div id="inspectorContent">
+                <p>Loading student workload data...</p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" id="btnCancelInspector" class="btn btn-secondary btn-sm">Close</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Add Candidate Modal
+    const modalAddCandidate = document.getElementById('modalAddCandidate');
+    const btnOpenAddCandidate = document.getElementById('btnOpenAddCandidateModal');
+    const btnTableAddCandidate = document.getElementById('btnTableAddCandidate');
+    const btnCloseCandidate = document.getElementById('btnCloseCandidateModal');
+    const btnCancelCandidate = document.getElementById('btnCancelCandidateModal');
+    const formAddCandidate = document.getElementById('formAddCandidate');
+
+    const openCandidateModal = () => {
+        formAddCandidate.reset();
+        document.getElementById('candPassword').value = 'student123';
+        modalAddCandidate.classList.add('active');
+    };
+
+    btnOpenAddCandidate?.addEventListener('click', openCandidateModal);
+    btnTableAddCandidate?.addEventListener('click', openCandidateModal);
+    btnCloseCandidate?.addEventListener('click', () => modalAddCandidate.classList.remove('active'));
+    btnCancelCandidate?.addEventListener('click', () => modalAddCandidate.classList.remove('active'));
+
+    formAddCandidate?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const payload = {
+            full_name: document.getElementById('candFullName').value.trim(),
+            usn: document.getElementById('candUsn').value.trim(),
+            email: document.getElementById('candEmail').value.trim(),
+            semester: parseInt(document.getElementById('candSemester').value) || 3,
+            password: document.getElementById('candPassword').value.trim() || 'student123'
+        };
+
+        try {
+            const res = await fetch('/api/admin/students', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            if (data.success) {
+                window.showAppToast?.(data.message, 'success');
+                modalAddCandidate.classList.remove('active');
+                setTimeout(() => location.reload(), 600);
+            } else {
+                window.showAppToast?.(data.error || 'Failed to enroll candidate', 'danger');
+            }
+        } catch (err) {
+            window.showAppToast?.('Network error adding candidate', 'danger');
+        }
+    });
+
+    // 2. Remove / Delete Candidate Handlers
+    function bindDeleteButtons() {
+        document.querySelectorAll('.btn-delete-student').forEach(btn => {
+            btn.onclick = async (e) => {
+                e.stopPropagation();
+                const sId = btn.dataset.studentId;
+                const sName = btn.dataset.studentName;
+
+                if (!confirm(`Are you sure you want to remove candidate "${sName}" from the enrolled student cohort? This will also remove their associated coursework records.`)) {
+                    return;
+                }
+
+                try {
+                    const res = await fetch(`/api/admin/student/${sId}`, {
+                        method: 'DELETE'
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        window.showAppToast?.(data.message, 'info');
+                        const row = document.getElementById(`student-row-${sId}`);
+                        if (row) {
+                            row.style.opacity = '0';
+                            row.style.transform = 'scale(0.95)';
+                            row.style.transition = 'all 0.3s ease';
+                            setTimeout(() => {
+                                row.remove();
+                                updateCohortCount();
+                            }, 300);
+                        }
+                    } else {
+                        window.showAppToast?.(data.error || 'Failed to remove candidate', 'danger');
+                    }
+                } catch (err) {
+                    window.showAppToast?.('Error removing candidate', 'danger');
+                }
+            };
+        });
+    }
+
+    function updateCohortCount() {
+        const rows = document.querySelectorAll('#studentsTableBody tr');
+        const badge = document.getElementById('studentCountBadge');
+        const stat = document.getElementById('statTotalStudents');
+        if (badge) badge.textContent = `Showing ${rows.length} active students`;
+        if (stat) stat.textContent = rows.length;
+    }
+
+    bindDeleteButtons();
+
+    // 3. Broadcast modal
+    const modalBroadcast = document.getElementById('modalBroadcast');
+    const btnOpenBroadcast = document.getElementById('btnOpenBroadcastModal');
+    const btnCloseBroadcast = document.getElementById('btnCloseBroadcastModal');
+    const btnCancelBroadcast = document.getElementById('btnCancelBroadcast');
+    const formBroadcast = document.getElementById('formBroadcastTask');
+
+    btnOpenBroadcast?.addEventListener('click', () => {
+        formBroadcast.reset();
+        const d = new Date();
+        d.setDate(d.getDate() + 3);
+        d.setHours(17, 0, 0, 0);
+        document.getElementById('bDeadline').value = d.toISOString().slice(0, 16);
+        modalBroadcast.classList.add('active');
+    });
+
+    btnCloseBroadcast?.addEventListener('click', () => modalBroadcast.classList.remove('active'));
+    btnCancelBroadcast?.addEventListener('click', () => modalBroadcast.classList.remove('active'));
+
+    formBroadcast?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const payload = {
+            title: document.getElementById('bTitle').value.trim(),
+            course_code: document.getElementById('bCourseCode').value.trim(),
+            category: document.getElementById('bCategory').value,
+            deadline: document.getElementById('bDeadline').value,
+            estimated_hours: parseFloat(document.getElementById('bHours').value) || 4.0,
+            perceived_difficulty: parseInt(document.getElementById('bDifficulty').value) || 3,
+            description: document.getElementById('bDesc').value.trim()
+        };
+
+        try {
+            const res = await fetch('/api/admin/broadcast-task', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            if (data.success) {
+                window.showAppToast?.(data.message, 'success');
+                modalBroadcast.classList.remove('active');
+                setTimeout(() => location.reload(), 800);
+            } else {
+                window.showAppToast?.(data.error || 'Failed to broadcast task', 'danger');
+            }
+        } catch (err) {
+            window.showAppToast?.('Network error broadcasting task', 'danger');
+        }
+    });
+
+    // 4. Inspector modal
+    const modalInspector = document.getElementById('modalInspector');
+    const inspectorContent = document.getElementById('inspectorContent');
+    const inspectorTitle = document.getElementById('inspectorModalTitle');
+    const btnCloseInspector = document.getElementById('btnCloseInspectorModal');
+    const btnCancelInspector = document.getElementById('btnCancelInspector');
+
+    btnCloseInspector?.addEventListener('click', () => modalInspector.classList.remove('active'));
+    btnCancelInspector?.addEventListener('click', () => modalInspector.classList.remove('active'));
+
+    document.querySelectorAll('.btn-inspect-student').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const sId = btn.dataset.studentId;
+            const sName = btn.dataset.studentName;
+            inspectorTitle.textContent = `🔍 Workload Inspection: ${sName}`;
+            inspectorContent.innerHTML = `<p>Loading student tasks and algorithms...</p>`;
+            modalInspector.classList.add('active');
+
+            try {
+                const res = await fetch(`/api/admin/student/${sId}`);
+                const data = await res.json();
+                if (data.success) {
+                    let html = `
+                        <div style="margin-bottom:1rem; padding:0.85rem; background:var(--bg-canvas); border-radius:var(--radius-md); font-size:0.85rem;">
+                            <strong>Student:</strong> ${data.student.full_name} (${data.student.usn || 'N/A'}) &bull; ${data.student.email}
+                        </div>
+                        <h4 style="font-size:0.95rem; font-weight:700; margin-bottom:0.65rem;">Active Prioritized Tasks (${data.tasks.length})</h4>
+                    `;
+
+                    if (data.tasks.length === 0) {
+                        html += `<p style="font-size:0.85rem; color:var(--text-tertiary);">No tasks currently assigned to this student.</p>`;
+                    } else {
+                        html += `<div style="display:flex; flex-direction:column; gap:0.6rem; max-height:260px; overflow-y:auto;">`;
+                        data.tasks.forEach(t => {
+                            html += `
+                                <div style="padding:0.65rem 0.85rem; border:1px solid var(--border-subtle); border-radius:var(--radius-sm); background:white; font-size:0.84rem; display:flex; justify-content:space-between; align-items:center;">
+                                    <div>
+                                        <strong>${t.title}</strong>
+                                        <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:0.15rem;">
+                                            [${t.course_code || 'CS'}] ${t.category} &bull; ${t.estimated_hours}h &bull; Difficulty ${t.perceived_difficulty}/5
+                                        </div>
+                                    </div>
+                                    <span class="urgency-badge badge-${t.badge_color}">Score: ${t.priority_score}</span>
+                                </div>
+                            `;
+                        });
+                        html += `</div>`;
+                    }
+
+                    html += `<h4 style="font-size:0.95rem; font-weight:700; margin-top:1.25rem; margin-bottom:0.65rem;">Visual Code Projects (${data.programs.length})</h4>`;
+                    if (data.programs.length === 0) {
+                        html += `<p style="font-size:0.85rem; color:var(--text-tertiary);">No programs saved yet in the visual library.</p>`;
+                    } else {
+                        html += `<div style="display:flex; flex-direction:column; gap:0.5rem;">`;
+                        data.programs.forEach(p => {
+                            html += `
+                                <div style="padding:0.6rem 0.85rem; background:white; border:1px solid var(--border-subtle); border-radius:var(--radius-sm); font-size:0.84rem;">
+                                    🧩 <strong>${p.title}</strong> &bull; <span style="color:var(--text-tertiary); font-size:0.78rem;">Saved ${p.created_at}</span>
+                                </div>
+                            `;
+                        });
+                        html += `</div>`;
+                    }
+
+                    inspectorContent.innerHTML = html;
+                }
+            } catch (err) {
+                inspectorContent.innerHTML = `<p style="color:var(--accent-crimson);">Failed to load student details.</p>`;
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

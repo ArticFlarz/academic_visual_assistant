@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}Register • Personalized Academic Learning Assistant{% endblock %}
+
+{% block content %}
+<div style="max-width: 520px; margin: 2.5rem auto;">
+    <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); padding: 2.25rem; box-shadow: var(--shadow-lg);">
+        
+        <div style="text-align: center; margin-bottom: 1.75rem;">
+            <div style="width: 52px; height: 52px; background: linear-gradient(135deg, var(--secondary), var(--primary)); border-radius: 16px; margin: 0 auto 1rem auto; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; color: white; box-shadow: 0 6px 16px rgba(224, 142, 69, 0.25);">
+                🌱
+            </div>
+            <h2 style="font-size: 1.55rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em;">Create Student Account</h2>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin-top: 0.25rem;">
+                Join the platform to balance your academic workload & master coding logic
+            </p>
+        </div>
+
+        <form method="POST" action="{{ url_for('register') }}">
+            <div class="form-group">
+                <label class="form-label" for="full_name">Full Name *</label>
+                <input type="text" id="full_name" name="full_name" class="form-control" placeholder="e.g. Student ABC" required>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label class="form-label" for="username">Username *</label>
+                    <input type="text" id="username" name="username" class="form-control" placeholder="student_abc" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="usn">Student Roll No / USN</label>
+                    <input type="text" id="usn" name="usn" class="form-control" placeholder="USN-ABC-01">
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label class="form-label" for="email">Student Email *</label>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="student@example.edu" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="semester">Semester</label>
+                    <select id="semester" name="semester" class="form-select">
+                        <option value="1">Sem 1</option>
+                        <option value="2">Sem 2</option>
+                        <option value="3" selected>Sem 3</option>
+                        <option value="4">Sem 4</option>
+                        <option value="5">Sem 5</option>
+                        <option value="6">Sem 6</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label class="form-label" for="password">Password *</label>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="confirm_password">Confirm Password *</label>
+                    <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="••••••••" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem; font-size: 0.96rem; margin-top: 0.5rem;">
+                Register & Open Workspace →
+            </button>
+        </form>
+
+        <div style="text-align: center; margin-top: 1.5rem; font-size: 0.88rem; color: var(--text-secondary);">
+            Already have an account? 
+            <a href="{{ url_for('login') }}" style="color: var(--primary); font-weight: 700; text-decoration: none;">Sign in here</a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+
+{% block title %}Visual Programming Assistant • Transpiles to Pseudocode, Python, C & Java{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/visual_canvas.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="visual-studio-container">
+    
+    <!-- Top Studio Toolbar -->
+    <div class="studio-toolbar">
+        <div class="studio-title-area">
+            <span style="font-size: 1.45rem;">🧩</span>
+            <div>
+                <input type="text" id="algorithmTitleInput" class="studio-title-input" value="Factorial Computation" title="Edit algorithm title" />
+                <span style="display:block; font-size:0.75rem; color:var(--text-tertiary); margin-left:0.65rem;">
+                    Visual Block Logic &bull; Real-time Transpilation Engine (Python, C, Java, Pseudocode)
+                </span>
+            </div>
+        </div>
+
+        <div class="studio-toolbar-actions">
+            <!-- Algorithm Template Dropdown -->
+            <select id="templateSelect" class="form-select" style="width: auto; padding: 0.45rem 0.85rem; font-size: 0.85rem;">
+                <option value="" disabled selected>📂 Load Algorithm Template...</option>
+                <option value="factorial">Factorial of N (Loops & Accumulator)</option>
+                <option value="fibonacci">Fibonacci Sequence (2 Pointers)</option>
+                <option value="even_odd">Even or Odd (Conditionals & Modulo)</option>
+                <option value="prime_check">Prime Number Test (Nested Logic)</option>
+                <option value="sum_natural">Sum of First N Numbers (While Loop)</option>
+            </select>
+
+            <a href="{{ url_for('program_library') }}" class="btn btn-secondary btn-sm" title="Explore 75+ algorithms in library">
+                📚 75+ Logic Library
+            </a>
+            <button type="button" id="btnRunCode" class="btn btn-primary btn-sm" title="Execute algorithm in Python sandbox">
+                ⚡ Run Logic
+            </button>
+            <button type="button" id="btnSaveProgram" class="btn btn-secondary btn-sm" title="Save this logic to your student library">
+                💾 Save Program
+            </button>
+            <button type="button" id="btnClearCanvas" class="btn btn-secondary btn-sm" title="Clear canvas blocks" style="color:var(--accent-crimson);">
+                🗑️ Clear
+            </button>
+        </div>
+    </div>
+
+    <!-- 3-Panel Studio Grid -->
+    <div class="studio-workspace-grid">
+        
+        <!-- Panel 1: Toolbox -->
+        <aside class="toolbox-panel">
+            <div class="toolbox-header">
+                <span>🧰 Construct Toolbox</span>
+            </div>
+
+            <!-- Variables -->
+            <div class="toolbox-category">
+                <div class="category-title">Variables & State</div>
+                <div class="toolbox-items-list">
+                    <button type="button" class="palette-block-btn cat-var" data-block-type="variable_declare">
+                        <span>📦 Declare Variable</span>
+                        <span style="font-size:0.72rem; opacity:0.8;">int / float</span>
+                    </button>
+                    <button type="button" class="palette-block-btn cat-var" data-block-type="variable_assign">
+                        <span>✏️ Assign Value</span>
+                        <span style="font-size:0.72rem; opacity:0.8;">x = expr</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Loops -->
+            <div class="toolbox-category">
+                <div class="category-title">Loops & Iterations</div>
+                <div class="toolbox-items-list">
+                    <button type="button" class="palette-block-btn cat-loop" data-block-type="for_loop">
+                        <span>🔁 Counted Loop (FOR)</span>
+                        <span style="font-size:0.72rem; opacity:0.8;">1 to N</span>
+                    </button>
+                    <button type="button" class="palette-block-btn cat-loop" data-block-type="while_loop">
+                        <span>🔄 Conditional Loop (WHILE)</span>
+                        <span style="font-size:0.72rem; opacity:0.8;">cond</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Logic & Branches -->
+            <div class="toolbox-category">
+                <div class="category-title">Control Flow</div>
+                <div class="toolbox-items-list">
+                    <button type="button" class="palette-block-btn cat-logic" data-block-type="if_condition">
+                        <span>🔀 Branch (IF / ELSE)</span>
+                        <span style="font-size:0.72rem; opacity:0.8;">condition</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Input & Output -->
+            <div class="toolbox-category">
+                <div class="category-title">Input & Output</div>
+                <div class="toolbox-items-list">
+                    <button type="button" class="palette-block-btn cat-io" data-block-type="input">
+                        <span>📥 Read Input</span>
+                        <span style="font-size:0.72rem; opacity:0.8;">prompt</span>
+                    </button>
+                    <button type="button" class="palette-block-btn cat-io" data-block-type="output">
+                        <span>📤 Print Output</span>
+                        <span style="font-size:0.72rem; opacity:0.8;">display</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Notes & Comments -->
+            <div class="toolbox-category">
+                <div class="category-title">Documentation</div>
+                <div class="toolbox-items-list">
+                    <button type="button" class="palette-block-btn cat-comment" data-block-type="comment">
+                        <span>💬 Step Note</span>
+                        <span style="font-size:0.72rem; opacity:0.8;">comment</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Panel 2: Visual Block Canvas -->
+        <section class="canvas-panel">
+            <div class="canvas-panel-header">
+                <div class="canvas-header-title">
+                    <span>📐 Algorithmic Canvas</span>
+                    <span style="font-size:0.75rem; font-weight:500; color:var(--text-secondary);">
+                        (Drag blocks or click to place; re-order inline)
+                    </span>
+                </div>
+            </div>
+
+            <div id="canvasWorkArea" class="canvas-work-area">
+                <!-- Blocks dynamically rendered by visual_canvas.js -->
+            </div>
+        </section>
+
+        <!-- Panel 3: Real-Time Transpiler & Console -->
+        <section class="transpiler-panel">
+            <div class="transpiler-tabs-bar">
+                <div class="tab-btn-group">
+                    <button type="button" class="transpiler-tab-btn" data-tab="pseudocode">
+                        📝 Pseudocode
+                    </button>
+                    <button type="button" class="transpiler-tab-btn active" data-tab="python">
+                        🐍 Python 3
+                    </button>
+                    <button type="button" class="transpiler-tab-btn" data-tab="c">
+                        ⚙️ ANSI C
+                    </button>
+                    <button type="button" class="transpiler-tab-btn" data-tab="java">
+                        ☕ Java
+                    </button>
+                </div>
+
+                <div class="tab-tool-actions">
+                    <button type="button" id="btnCopyCode" class="btn btn-secondary btn-sm" title="Copy code to clipboard">
+                        📋 Copy
+                    </button>
+                    <button type="button" id="btnDownloadCode" class="btn btn-secondary btn-sm" title="Download source code file">
+                        💾 Export
+                    </button>
+                </div>
+            </div>
+
+            <!-- Code Viewer -->
+            <pre id="codeViewer" class="code-viewer-container"></pre>
+
+            <!-- Interactive Console Output -->
+            <div id="consolePanel" class="console-panel">
+                <div class="console-header">
+                    <div style="display:flex; align-items:center; gap:0.55rem;">
+                        <span>🖥️ Interactive Terminal Output</span>
+                        <span id="terminalStatusBadge" class="terminal-badge-idle">Idle</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:0.45rem;">
+                        <button type="button" id="btnClearTerminal" class="btn-terminal-header" title="Clear terminal screen">
+                            🧹 Clear
+                        </button>
+                        <span style="font-size:0.7rem; color:#A69B93;">Live Sandbox</span>
+                    </div>
+                </div>
+
+                <div id="consoleOutput" class="console-output-area">
+                    <div class="terminal-line text-muted">Personalized Visual Programming Assistant Sandbox v2.0</div>
+                    <div class="terminal-line text-muted">Ready. Click '⚡ Run Logic' above or interact with inputs below.</div>
+                </div>
+
+                <!-- Interactive Terminal Input Prompt Bar -->
+                <div id="terminalInputContainer" class="terminal-cli-container" style="display:none;">
+                    <span class="terminal-prompt-symbol">❯</span>
+                    <input type="text" id="terminalInput" class="terminal-input-field" placeholder="Type input here and press Enter..." autocomplete="off" />
+                    <button type="button" id="btnTerminalSubmit" class="btn-terminal-submit" title="Send input to running program">
+                        Send ⏎
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/program_library_data.js') }}"></script>
+<script src="{{ url_for('static', filename='js/templates.js') }}"></script>
+<script src="{{ url_for('static', filename='js/transpiler.js') }}"></script>
+<script src="{{ url_for('static', filename='js/visual_canvas.js') }}"></script>
+{% endblock %}

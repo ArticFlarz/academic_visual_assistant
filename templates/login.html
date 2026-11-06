@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign In • Personalized Academic Learning Assistant{% endblock %}
+
+{% block content %}
+<div style="max-width: 460px; margin: 3.5rem auto;">
+    <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); padding: 2.25rem; box-shadow: var(--shadow-lg);">
+        
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <div style="width: 54px; height: 54px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 16px; margin: 0 auto 1rem auto; display: flex; align-items: center; justify-content: center; font-size: 1.65rem; color: white; box-shadow: 0 6px 16px rgba(217, 107, 67, 0.25);">
+                🎓
+            </div>
+            <h2 style="font-size: 1.55rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em;">Welcome Back</h2>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin-top: 0.25rem;">
+                Sign in to manage your coursework & practice visual algorithms
+            </p>
+        </div>
+
+        <form method="POST" action="{{ url_for('login') }}">
+            <div class="form-group">
+                <label class="form-label" for="identifier">Email or Username</label>
+                <input type="text" id="identifier" name="identifier" class="form-control" placeholder="e.g. student@example.edu" required autofocus>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label class="form-label" for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem; font-size: 0.96rem;">
+                Sign In to Dashboard →
+            </button>
+        </form>
+
+        <!-- Quick Student Demo Fill -->
+        <div style="margin-top: 1.5rem; padding: 1.15rem; background: var(--bg-canvas); border: 1px dashed var(--border-subtle); border-radius: var(--radius-md); text-align: center;">
+            <span style="font-size: 0.78rem; font-weight: 700; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 0.55rem;">
+                Student Demo Access
+            </span>
+            <button type="button" id="btnDemoFill" class="btn btn-secondary btn-sm" style="width: 100%;">
+                👤 Fill Demo Student (Student ABC)
+            </button>
+        </div>
+
+        <!-- Separate Admin Portal Navigation -->
+        <div style="margin-top: 1.25rem; padding-top: 1.15rem; border-top: 1px solid var(--border-subtle); text-align: center;">
+            <span style="display: block; font-size: 0.8rem; color: var(--text-tertiary); margin-bottom: 0.45rem;">
+                Coursework Evaluator or Department Administrator?
+            </span>
+            <a href="{{ url_for('admin_login') }}" class="btn btn-secondary btn-sm" style="width: 100%; border-color: var(--primary-border); color: var(--primary); font-weight: 700;">
+                🛡️ Go to Dedicated Admin Sign-In →
+            </a>
+        </div>
+
+        <div style="text-align: center; margin-top: 1.5rem; font-size: 0.88rem; color: var(--text-secondary);">
+            Don't have an account yet? 
+            <a href="{{ url_for('register') }}" style="color: var(--primary); font-weight: 700; text-decoration: none;">Create student account</a>
+        </div>
+
+    </div>
+</div>
+
+<script>
+document.getElementById('btnDemoFill')?.addEventListener('click', () => {
+    document.getElementById('identifier').value = 'student@example.edu';
+    document.getElementById('password').value = 'student123';
+    window.showAppToast?.('Loaded Student ABC credentials!', 'success');
+});
+</script>
+{% endblock %}

@@ -1,0 +1,660 @@
+{% extends 'base.html' %}
+
+{% block title %}Algorithm Logic Library • 75 Programs for Visual Programming{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Logic Library Styles */
+.library-hero {
+    background: linear-gradient(135deg, #FFFDF9 0%, #F9F1E6 100%);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    padding: 2.25rem 2rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+}
+
+.library-hero::after {
+    content: "📚";
+    position: absolute;
+    right: 2rem;
+    bottom: -1rem;
+    font-size: 7.5rem;
+    opacity: 0.12;
+    pointer-events: none;
+}
+
+.library-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-pill);
+    background: var(--primary-light);
+    color: var(--primary);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.85rem;
+    border: 1px solid var(--primary-border);
+}
+
+.library-hero h2 {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 0.5rem;
+}
+
+.library-hero p {
+    color: var(--text-secondary);
+    font-size: 0.96rem;
+    max-width: 760px;
+    line-height: 1.6;
+}
+
+.library-stats-strip {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1.25rem;
+    flex-wrap: wrap;
+}
+
+.stat-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid var(--border-subtle);
+    padding: 0.4rem 0.85rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.84rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.stat-chip strong {
+    color: var(--text-primary);
+}
+
+/* Filter & Search Bar */
+.filter-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.75rem;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.filter-top-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.search-wrapper {
+    position: relative;
+    flex: 1;
+    min-width: 260px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.65rem 1rem 0.65rem 2.65rem;
+    border: 1.5px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    font-size: 0.92rem;
+    background: var(--bg-canvas);
+    transition: var(--transition);
+}
+
+.search-input:focus {
+    border-color: var(--primary);
+    background: white;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(217, 107, 67, 0.18);
+}
+
+.search-icon-inside {
+    position: absolute;
+    left: 0.95rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-tertiary);
+    font-size: 0.95rem;
+    pointer-events: none;
+}
+
+.category-chips-list {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    overflow-x: auto;
+    padding-bottom: 0.35rem;
+    scrollbar-width: thin;
+}
+
+.category-chip {
+    padding: 0.4rem 0.85rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--bg-canvas);
+    border: 1.5px solid var(--border-subtle);
+    color: var(--text-secondary);
+    white-space: nowrap;
+    transition: var(--transition);
+    user-select: none;
+}
+
+.category-chip:hover {
+    border-color: var(--primary-border);
+    background: var(--primary-light);
+    color: var(--primary);
+    transform: translateY(-1px);
+}
+
+.category-chip.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+    box-shadow: 0 2px 6px rgba(217, 107, 67, 0.25);
+}
+
+.results-meta-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.86rem;
+    color: var(--text-secondary);
+    padding: 0 0.25rem;
+}
+
+/* Program Cards Grid */
+.program-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.25rem;
+}
+
+.program-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 1.35rem;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: var(--transition);
+    position: relative;
+    border-top: 4px solid var(--primary);
+}
+
+.program-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-hover);
+}
+
+.card-top-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+}
+
+.category-badge-pill {
+    font-size: 0.73rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    background: var(--bg-subtle);
+    color: var(--text-secondary);
+}
+
+.difficulty-pill {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.18rem 0.55rem;
+    border-radius: var(--radius-pill);
+}
+
+.diff-Beginner { background: #EFF6F0; color: #2D6A4F; border: 1px solid #D2E7D7; }
+.diff-Intermediate { background: #FEF7EE; color: #B35C1E; border: 1px solid #FCE5C8; }
+.diff-Advanced { background: #FDF2F0; color: #B83A20; border: 1px solid #F8CEC7; }
+
+.program-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.35;
+    margin-bottom: 0.5rem;
+}
+
+.program-desc {
+    font-size: 0.86rem;
+    color: var(--text-secondary);
+    line-height: 1.55;
+    margin-bottom: 1rem;
+    flex: 1;
+}
+
+.concept-tags-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-bottom: 1.15rem;
+}
+
+.concept-tag {
+    font-size: 0.72rem;
+    background: #FAF6F0;
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+}
+
+.card-actions-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--border-subtle);
+}
+
+.blocks-count-tag {
+    font-size: 0.78rem;
+    color: var(--text-tertiary);
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.btn-open-assistant {
+    background: var(--primary);
+    color: white;
+    font-size: 0.84rem;
+    font-weight: 700;
+    padding: 0.45rem 0.95rem;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: var(--transition);
+    box-shadow: 0 2px 6px rgba(217, 107, 67, 0.25);
+    border: none;
+    cursor: pointer;
+}
+
+.btn-open-assistant:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: 0 4px 12px rgba(217, 107, 67, 0.35);
+    color: white;
+}
+
+.btn-quick-preview {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    font-size: 0.84rem;
+    padding: 0.45rem 0.75rem;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-quick-preview:hover {
+    background: var(--bg-subtle);
+    color: var(--text-primary);
+}
+
+/* Modal for Preview */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(43, 35, 30, 0.55);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1.5rem;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.preview-modal-content {
+    background: white;
+    border-radius: var(--radius-xl);
+    width: 100%;
+    max-width: 680px;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 2rem;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    border: 1px solid var(--border-subtle);
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    background: var(--bg-subtle);
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    transition: var(--transition);
+}
+
+.modal-close-btn:hover {
+    background: var(--accent-crimson-light);
+    color: var(--accent-crimson);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-container" style="max-width: 1400px; margin: 0 auto; padding: 1.5rem 1rem;">
+    
+    <!-- Hero Header -->
+    <div class="library-hero">
+        <span class="library-badge">📖 Curriculum Logic Repository</span>
+        <h2>Algorithm Logic & Visual Programming Library</h2>
+        <p>
+            Master 75 foundational algorithms and computational thinking patterns spanning 8 core engineering domains.
+            Click <strong>"Open in Visual Assistant"</strong> on any algorithm to instantly populate your workspace,
+            inspect the logic blocks, and transpile in real time to <strong>Python 3, ANSI C, Java 17+, and Academic Pseudocode</strong>.
+        </p>
+
+        <div class="library-stats-strip">
+            <div class="stat-chip">
+                <span>📚 Total Algorithms:</span>
+                <strong id="statTotalCount">75</strong>
+            </div>
+            <div class="stat-chip">
+                <span>☕ Supported Transpilation:</span>
+                <strong>Python • C • Java • Pseudocode</strong>
+            </div>
+            <div class="stat-chip">
+                <span>🧩 Visual Engine:</span>
+                <strong>Drag &amp; Drop AST Blocks</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter & Search Panel -->
+    <div class="filter-card">
+        <div class="filter-top-row">
+            <div class="search-wrapper">
+                <span class="search-icon-inside">🔍</span>
+                <input type="text" id="librarySearchInput" class="search-input" placeholder="Search 75 programs by title, algorithm, or concept (e.g. Factorial, Prime, Binary Search)..." />
+            </div>
+
+            <select id="difficultyFilter" class="form-select" style="width: auto; padding: 0.65rem 1rem; border-radius: var(--radius-md);">
+                <option value="all">All Difficulties</option>
+                <option value="Beginner">🟢 Beginner</option>
+                <option value="Intermediate">🟠 Intermediate</option>
+                <option value="Advanced">🔴 Advanced</option>
+            </select>
+        </div>
+
+        <!-- Category Horizontal Filter Tabs -->
+        <div class="category-chips-list" id="categoryChips">
+            <button type="button" class="category-chip active" data-category="all">All Categories (75)</button>
+            <button type="button" class="category-chip" data-category="Fundamentals & Arithmetic">Fundamentals (10)</button>
+            <button type="button" class="category-chip" data-category="Conditional Decision Making">Conditionals (10)</button>
+            <button type="button" class="category-chip" data-category="Loops & Iterations">Loops &amp; Series (10)</button>
+            <button type="button" class="category-chip" data-category="Number Theory & Digits">Number Theory (10)</button>
+            <button type="button" class="category-chip" data-category="Arrays & Sequences">Arrays (10)</button>
+            <button type="button" class="category-chip" data-category="Searching & Sorting">Searching &amp; Sorting (8)</button>
+            <button type="button" class="category-chip" data-category="Patterns & Visual Geometry">Patterns &amp; 2D (10)</button>
+            <button type="button" class="category-chip" data-category="Practical Math & Conversions">Math &amp; Conversions (7)</button>
+        </div>
+
+        <div class="results-meta-bar">
+            <div>
+                Showing <strong id="showingCount" style="color:var(--primary);">75</strong> algorithms
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-tertiary);">
+                Clicking "Open" loads the AST directly into the Visual Studio
+            </div>
+        </div>
+    </div>
+
+    <!-- Programs Grid -->
+    <div id="programsGrid" class="program-grid">
+        <!-- Rendered by JavaScript -->
+    </div>
+
+</div>
+
+<!-- Quick Preview Modal -->
+<div id="previewModal" class="modal-overlay">
+    <div class="preview-modal-content">
+        <button type="button" class="modal-close-btn" id="btnCloseModal">&times;</button>
+        <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.75rem;">
+            <span id="modalCategory" class="category-badge-pill"></span>
+            <span id="modalDifficulty" class="difficulty-pill"></span>
+        </div>
+        <h3 id="modalTitle" style="font-size:1.35rem; font-weight:700; color:var(--text-primary); margin-bottom:0.65rem;"></h3>
+        <p id="modalDesc" style="color:var(--text-secondary); font-size:0.92rem; line-height:1.6; margin-bottom:1.25rem;"></p>
+
+        <div style="margin-bottom: 1.25rem;">
+            <strong style="font-size:0.85rem; text-transform:uppercase; color:var(--text-tertiary); letter-spacing:0.04em;">Key Computational Concepts:</strong>
+            <div id="modalConcepts" class="concept-tags-row" style="margin-top:0.35rem;"></div>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+            <strong style="font-size:0.85rem; text-transform:uppercase; color:var(--text-tertiary); letter-spacing:0.04em;">AST Blocks Structure:</strong>
+            <div id="modalBlockList" style="margin-top:0.5rem; background:var(--bg-canvas); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:1rem; font-size:0.85rem; font-family:var(--font-mono); max-height:200px; overflow-y:auto;"></div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:0.75rem;">
+            <button type="button" class="btn btn-secondary btn-sm" id="btnCancelModal">Close</button>
+            <a id="modalOpenBtn" href="#" class="btn btn-primary btn-sm" style="font-weight:700;">
+                🚀 Open in Visual Assistant
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/program_library_data.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const programs = window.PROGRAM_LIBRARY_DATA || [];
+    const programsGrid = document.getElementById('programsGrid');
+    const searchInput = document.getElementById('librarySearchInput');
+    const difficultyFilter = document.getElementById('difficultyFilter');
+    const categoryChips = document.querySelectorAll('.category-chip');
+    const showingCount = document.getElementById('showingCount');
+
+    // Modal elements
+    const previewModal = document.getElementById('previewModal');
+    const btnCloseModal = document.getElementById('btnCloseModal');
+    const btnCancelModal = document.getElementById('btnCancelModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalCategory = document.getElementById('modalCategory');
+    const modalDifficulty = document.getElementById('modalDifficulty');
+    const modalDesc = document.getElementById('modalDesc');
+    const modalConcepts = document.getElementById('modalConcepts');
+    const modalBlockList = document.getElementById('modalBlockList');
+    const modalOpenBtn = document.getElementById('modalOpenBtn');
+
+    let activeCategory = 'all';
+    let activeDifficulty = 'all';
+    let searchQuery = '';
+
+    function renderPrograms() {
+        const filtered = programs.filter(p => {
+            const matchesCat = activeCategory === 'all' || p.category === activeCategory;
+            const matchesDiff = activeDifficulty === 'all' || p.difficulty === activeDifficulty;
+            const textMatch = searchQuery === '' || 
+                p.title.toLowerCase().includes(searchQuery) ||
+                p.description.toLowerCase().includes(searchQuery) ||
+                (p.concepts && p.concepts.some(c => c.toLowerCase().includes(searchQuery)));
+            return matchesCat && matchesDiff && textMatch;
+        });
+
+        showingCount.textContent = filtered.length;
+
+        if (filtered.length === 0) {
+            programsGrid.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem; color: var(--text-tertiary);">
+                    <span style="font-size: 3rem; display: block; margin-bottom: 0.75rem;">🔍</span>
+                    <h4>No algorithms matching your criteria</h4>
+                    <p style="font-size: 0.88rem; margin-top: 0.35rem;">Try adjusting your search terms or clearing category filters.</p>
+                </div>
+            `;
+            return;
+        }
+
+        programsGrid.innerHTML = filtered.map(p => {
+            const conceptPills = (p.concepts || []).map(c => `<span class="concept-tag">${escapeHtml(c)}</span>`).join('');
+            const blocksCount = p.blocks ? p.blocks.length : 0;
+            const loadUrl = `/visual-assistant?load=${encodeURIComponent(p.id)}`;
+
+            return `
+                <div class="program-card">
+                    <div>
+                        <div class="card-top-meta">
+                            <span class="category-badge-pill">${escapeHtml(p.category)}</span>
+                            <span class="difficulty-pill diff-${p.difficulty}">${p.difficulty}</span>
+                        </div>
+                        <h4 class="program-title">${escapeHtml(p.title)}</h4>
+                        <p class="program-desc">${escapeHtml(p.description)}</p>
+                        <div class="concept-tags-row">
+                            ${conceptPills}
+                        </div>
+                    </div>
+
+                    <div class="card-actions-row">
+                        <span class="blocks-count-tag" title="${blocksCount} visual construct blocks">
+                            🧩 ${blocksCount} Blocks
+                        </span>
+                        <div style="display: flex; gap: 0.45rem;">
+                            <button type="button" class="btn-quick-preview" data-id="${p.id}" title="Quick inspect algorithm logic">
+                                👁️ Preview
+                            </button>
+                            <a href="${loadUrl}" class="btn-open-assistant" title="Load into visual assistant workspace">
+                                🚀 Open
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        // Attach preview listeners
+        document.querySelectorAll('.btn-quick-preview').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const progId = btn.dataset.id;
+                openPreview(progId);
+            });
+        });
+    }
+
+    function openPreview(progId) {
+        const prog = programs.find(p => p.id === progId);
+        if (!prog) return;
+
+        modalTitle.textContent = prog.title;
+        modalCategory.textContent = prog.category;
+        modalDifficulty.textContent = prog.difficulty;
+        modalDifficulty.className = `difficulty-pill diff-${prog.difficulty}`;
+        modalDesc.textContent = prog.description;
+
+        modalConcepts.innerHTML = (prog.concepts || []).map(c => `<span class="concept-tag">${escapeHtml(c)}</span>`).join('');
+
+        const blocksHtml = (prog.blocks || []).map((b, idx) => {
+            return `<div>${idx + 1}. [${b.type}] ${b.var_name ? b.var_name + ' (' + (b.var_type || '') + ')' : ''} ${b.expression || b.condition || b.text || ''}</div>`;
+        }).join('');
+        modalBlockList.innerHTML = blocksHtml || '<em>No blocks recorded</em>';
+
+        modalOpenBtn.href = `/visual-assistant?load=${encodeURIComponent(prog.id)}`;
+        previewModal.classList.add('active');
+    }
+
+    function closeModal() {
+        previewModal.classList.remove('active');
+    }
+
+    if (btnCloseModal) btnCloseModal.addEventListener('click', closeModal);
+    if (btnCancelModal) btnCancelModal.addEventListener('click', closeModal);
+    if (previewModal) {
+        previewModal.addEventListener('click', (e) => {
+            if (e.target === previewModal) closeModal();
+        });
+    }
+
+    // Filter Listeners
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value.toLowerCase().trim();
+            renderPrograms();
+        });
+    }
+
+    if (difficultyFilter) {
+        difficultyFilter.addEventListener('change', (e) => {
+            activeDifficulty = e.target.value;
+            renderPrograms();
+        });
+    }
+
+    categoryChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            categoryChips.forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            activeCategory = chip.dataset.category;
+            renderPrograms();
+        });
+    });
+
+    function escapeHtml(text) {
+        return String(text)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    // Initial render
+    renderPrograms();
+});
+</script>
+{% endblock %}

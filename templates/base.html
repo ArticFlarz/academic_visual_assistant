@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Personalized Academic Learning and Visual Programming Assistant{% endblock %}</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/logo.svg') }}">
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_css %}{% endblock %}
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+    <!-- Warm Humanist Navigation Header -->
+    <nav class="navbar">
+        <a href="{{ url_for('dashboard') if current_user else url_for('login') }}" class="brand-wrapper">
+            <div class="brand-logo-icon">🎓</div>
+            <div class="brand-info">
+                <h1>Academic Learning & Visual Assistant</h1>
+                <span>Intelligent Workload & Algorithmic Programming System</span>
+            </div>
+        </a>
+
+        {% if current_user %}
+        <ul class="nav-links">
+            {% if current_user.role == 'admin' %}
+            <li>
+                <a href="{{ url_for('admin_dashboard') }}" class="nav-link {% if request.path == '/admin' %}active{% endif %}" style="color:var(--primary); font-weight:700;">
+                    🛡️ Admin Oversight
+                </a>
+            </li>
+            {% else %}
+            <li>
+                <a href="{{ url_for('dashboard') }}" class="nav-link {% if request.path == '/dashboard' %}active{% endif %}">
+                    📊 Student Workload Hub
+                </a>
+            </li>
+            {% endif %}
+            <li>
+                <a href="{{ url_for('visual_assistant') }}" class="nav-link {% if request.path == '/visual-assistant' %}active{% endif %}">
+                    🧩 Visual Programming
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('program_library') }}" class="nav-link {% if request.path == '/program-library' %}active{% endif %}">
+                    📚 Logic Library (75)
+                </a>
+            </li>
+        </ul>
+
+        <div class="nav-user">
+            <div class="user-badge">
+                <div class="avatar-circle">
+                    {{ current_user.full_name[0] if current_user.full_name else 'S' }}
+                </div>
+                <div>
+                    <div class="user-name">{{ current_user.full_name }}</div>
+                    <span class="usn-pill">{{ current_user.usn or 'User' }}</span>
+                </div>
+            </div>
+            <a href="{{ url_for('logout') }}" class="btn-signout" title="Sign out safely">Sign Out</a>
+        </div>
+        {% else %}
+        <ul class="nav-links">
+            <li>
+                <a href="{{ url_for('login') }}" class="nav-link {% if request.path == '/login' %}active{% endif %}">
+                    Sign In
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('register') }}" class="btn btn-primary btn-sm">
+                    Register
+                </a>
+            </li>
+        </ul>
+        {% endif %}
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="page-container">
+        <!-- Flash Notifications -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert-container">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            <span>{{ message }}</span>
+                            <button type="button" class="btn-close-alert" aria-label="Close">&times;</button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Warm Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div>
+                <strong>Personalized Academic Learning and Visual Programming Assistance System</strong>
+                <p style="margin-top:0.25rem; font-size:0.78rem; color:var(--text-tertiary);">
+                    Intelligent Workload Prioritization & Real-Time Code Transpilation System
+                </p>
+            </div>
+            <div class="footer-tech-tag">
+                <span>🌱 Python Flask • SQLite • Chart.js • Pseudocode / Python / C / Java Transpiler</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Global App Scripts -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

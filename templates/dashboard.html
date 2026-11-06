@@ -1,0 +1,474 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard • Personalized Academic Learning Assistant{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+<!-- Dashboard Hero Header -->
+<div class="dash-hero">
+    <div class="dash-hero-text">
+        <h2>Welcome back, {{ current_user.full_name }} 👋</h2>
+        <p>
+            Your dynamic, difficulty-weighted schedule is organized below. Our prioritization heuristic accounts for task complexity and time pressure so you always know what to study next.
+        </p>
+    </div>
+
+    <!-- Cognitive Stress Index Gauge -->
+    <div class="cognitive-card">
+        <div class="stress-dial-wrapper">
+            <svg class="stress-dial-svg" viewBox="0 0 64 64">
+                <circle class="stress-dial-bg" cx="32" cy="32" r="25" />
+                <circle id="stressDialFill" class="stress-dial-fill" cx="32" cy="32" r="25"
+                        stroke-dasharray="157" stroke-dashoffset="60" />
+            </svg>
+            <div id="stressDialNumber" class="stress-dial-number">--</div>
+        </div>
+        <div class="cognitive-info">
+            <span class="cognitive-label">🧠 Cognitive Stress Index</span>
+            <div id="cognitiveStatus" class="cognitive-status">Calculating load...</div>
+            <p id="cognitiveTip" class="cognitive-tip">
+                Loading personalized study advice...
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Key Academic Metrics -->
+<div class="metrics-row">
+    <div class="metric-card">
+        <div class="metric-header">
+            <span class="metric-title">Active Effort Needed</span>
+            <div class="metric-icon icon-terracotta">⏳</div>
+        </div>
+        <div id="metricActiveHours" class="metric-val">--h</div>
+        <span class="metric-subtitle">Total estimated hours remaining</span>
+    </div>
+
+    <div class="metric-card">
+        <div class="metric-header">
+            <span class="metric-title">Completion Rate</span>
+            <div class="metric-icon icon-sage">📈</div>
+        </div>
+        <div id="metricCompletionRate" class="metric-val">--%</div>
+        <span class="metric-subtitle">Coursework successfully archived</span>
+    </div>
+
+    <div class="metric-card">
+        <div class="metric-header">
+            <span class="metric-title">Active Coursework</span>
+            <div class="metric-icon icon-amber">📌</div>
+        </div>
+        <div id="metricActiveCount" class="metric-val">--</div>
+        <span class="metric-subtitle">Labs, assignments & projects active</span>
+    </div>
+
+    <div class="metric-card">
+        <div class="metric-header">
+            <span class="metric-title">Completed Tasks</span>
+            <div class="metric-icon icon-sage">✅</div>
+        </div>
+        <div id="metricCompletedCount" class="metric-val">--</div>
+    </div>
+</div>
+
+<!-- Interactive Logic Library Callout Banner -->
+<div class="logic-studio-callout">
+    <div class="logic-callout-text">
+        <span class="callout-icon">🧩</span>
+        <div>
+            <h4>Visual Programming Studio &amp; 75+ Algorithm Logic Library</h4>
+            <p>
+                Build algorithms with drag-and-drop visual blocks, explore 75 curated programs, and transpile in real-time to <strong>Python, ANSI C, Java 17+, and Pseudocode</strong>.
+            </p>
+        </div>
+    </div>
+    <div class="logic-callout-actions">
+        <a href="{{ url_for('program_library') }}" class="btn btn-secondary btn-sm">
+            📚 75+ Algorithms Library
+        </a>
+        <a href="{{ url_for('visual_assistant') }}" class="btn btn-primary btn-sm">
+            🚀 Open Visual Studio
+        </a>
+    </div>
+</div>
+
+<!-- SYSTEMATIC WORKLOAD HUB TABS BAR -->
+<div class="hub-tabs-container">
+    <div class="hub-tabs-nav" role="tablist">
+        <button type="button" class="hub-tab-btn active" data-hub-tab="tasks" role="tab" aria-selected="true">
+            <span class="hub-tab-icon">⚡</span>
+            <span class="hub-tab-label">Prioritized Tasks</span>
+            <span id="hubTabBadgeTasks" class="hub-tab-badge">0 Active</span>
+        </button>
+        <button type="button" class="hub-tab-btn" data-hub-tab="calendar" role="tab" aria-selected="false">
+            <span class="hub-tab-icon">📅</span>
+            <span class="hub-tab-label">Due Calendar &amp; Reminders</span>
+            <span id="hubTabBadgeCalendar" class="hub-tab-badge">0 Dues</span>
+        </button>
+        <button type="button" class="hub-tab-btn" data-hub-tab="analytics" role="tab" aria-selected="false">
+            <span class="hub-tab-icon">📊</span>
+            <span class="hub-tab-label">Cognitive Analytics &amp; Load</span>
+        </button>
+        <button type="button" class="hub-tab-btn" data-hub-tab="unified" role="tab" aria-selected="false">
+            <span class="hub-tab-icon">🗂️</span>
+            <span class="hub-tab-label">Unified Workspace</span>
+        </button>
+    </div>
+
+    <div class="hub-tabs-actions">
+        <button type="button" id="btnHubOpenAddTask" class="btn btn-primary btn-sm">
+            + Log Academic Task
+        </button>
+    </div>
+</div>
+
+<!-- Main Dashboard Layout Container with Active View State -->
+<div class="dashboard-grid dashboard-hub-layout" id="dashboardMainContainer" data-active-view="tasks">
+    
+    <!-- LEFT COLUMN: Prioritized Tasks Hub -->
+    <div class="task-section-card">
+        <div class="task-section-header">
+            <div class="task-section-title-wrap">
+                <h3>⚡ Dynamic Prioritized Coursework</h3>
+                <p>Ranked algorithmically by deadline proximity, effort ratio, and perceived difficulty.</p>
+            </div>
+            <div>
+                <button type="button" id="btnOpenAddTask" class="btn btn-primary btn-sm">
+                    + Log Academic Task
+                </button>
+            </div>
+        </div>
+
+        <!-- SYSTEMATIC 3-TIER TASKTABS TOOLBAR -->
+        <div class="tasktabs-system">
+            
+            <!-- Tier 1: Primary Status & Urgency Tasktabs -->
+            <div class="tasktabs-row tasktabs-status-row">
+                <span class="tasktabs-row-label">Status:</span>
+                <div class="tasktabs-pills-list">
+                    <button type="button" class="tasktab-btn active" data-status="all">
+                        <span class="tasktab-dot dot-all"></span>
+                        <span class="tasktab-text">All Coursework</span>
+                        <span class="tasktab-count" id="badgeCountAll">0</span>
+                    </button>
+                    <button type="button" class="tasktab-btn" data-status="active">
+                        <span class="tasktab-dot dot-active"></span>
+                        <span class="tasktab-text">Active Workload</span>
+                        <span class="tasktab-count count-active" id="badgeCountActive">0</span>
+                    </button>
+                    <button type="button" class="tasktab-btn" data-status="urgent">
+                        <span class="tasktab-dot dot-urgent"></span>
+                        <span class="tasktab-text">Urgent / Overdue</span>
+                        <span class="tasktab-count count-urgent" id="badgeCountUrgent">0</span>
+                    </button>
+                    <button type="button" class="tasktab-btn" data-status="In Progress">
+                        <span class="tasktab-dot dot-progress"></span>
+                        <span class="tasktab-text">In Progress</span>
+                        <span class="tasktab-count" id="badgeCountInProgress">0</span>
+                    </button>
+                    <button type="button" class="tasktab-btn" data-status="Pending">
+                        <span class="tasktab-dot dot-pending"></span>
+                        <span class="tasktab-text">Pending</span>
+                        <span class="tasktab-count" id="badgeCountPending">0</span>
+                    </button>
+                    <button type="button" class="tasktab-btn" data-status="Completed">
+                        <span class="tasktab-dot dot-completed"></span>
+                        <span class="tasktab-text">Completed</span>
+                        <span class="tasktab-count count-completed" id="badgeCountCompleted">0</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tier 2: Category Filter Tasktabs (Chips) -->
+            <div class="tasktabs-row tasktabs-category-row">
+                <span class="tasktabs-row-label">Category:</span>
+                <div class="category-chips-list">
+                    <button type="button" class="category-chip-btn active" data-category="all">
+                        <span>All Categories</span>
+                        <span class="chip-count" id="catCountAll">0</span>
+                    </button>
+                    <button type="button" class="category-chip-btn" data-category="Laboratory Work">
+                        <span>🔬 Lab Work</span>
+                        <span class="chip-count" id="catCountLab">0</span>
+                    </button>
+                    <button type="button" class="category-chip-btn" data-category="Assignment">
+                        <span>📑 Assignments</span>
+                        <span class="chip-count" id="catCountAssign">0</span>
+                    </button>
+                    <button type="button" class="category-chip-btn" data-category="Project">
+                        <span>💻 Projects</span>
+                        <span class="chip-count" id="catCountProj">0</span>
+                    </button>
+                    <button type="button" class="category-chip-btn" data-category="Examination">
+                        <span>📝 Examinations</span>
+                        <span class="chip-count" id="catCountExam">0</span>
+                    </button>
+                    <button type="button" class="category-chip-btn" data-category="Reading/Quiz">
+                        <span>📖 Quizzes</span>
+                        <span class="chip-count" id="catCountQuiz">0</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tier 3: Search, Sort & Action Utility Controls -->
+            <div class="tasktabs-row tasktabs-controls-row">
+                <!-- Search Input with Clear Button -->
+                <div class="task-search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="taskSearchInput" class="task-search-field" placeholder="Search tasks by title, course code (e.g. CS204), or notes...">
+                    <button type="button" id="btnClearSearch" class="btn-clear-search" title="Clear search" style="display:none;">&times;</button>
+                </div>
+
+                <!-- Sort & Results Counter & Reset -->
+                <div class="task-controls-right">
+                    <div class="sort-selector-wrapper">
+                        <label for="taskSortSelect" class="sort-label">Sort by:</label>
+                        <select id="taskSortSelect" class="sort-dropdown">
+                            <option value="priority" selected>⚡ Heuristic Priority (Recommended)</option>
+                            <option value="deadline">⏰ Earliest Deadline</option>
+                            <option value="effort_asc">⏳ Shortest Effort (&le; hrs)</option>
+                            <option value="effort_desc">⏳ Longest Effort (&ge; hrs)</option>
+                            <option value="difficulty">🧠 Highest Difficulty (5→1)</option>
+                        </select>
+                    </div>
+
+                    <span id="taskResultsCount" class="results-count-pill">Showing tasks...</span>
+
+                    <button type="button" id="btnResetFilters" class="btn-reset-filters" style="display:none;" title="Reset active filters">
+                        ↺ Reset
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Tasks List Container -->
+        <div id="tasksListContainer" class="tasks-list">
+            <div class="empty-state">
+                <p>Loading your prioritized tasks...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT COLUMN: Calendar Planner & Analytics -->
+    <div class="analytics-column">
+        
+        <!-- REAL DATE CALENDAR & DUE PLANNER -->
+        <div class="calendar-card">
+            <!-- Header with Title, Month/Year and Nav Controls -->
+            <div class="cal-header">
+                <div class="cal-title-wrap">
+                    <span class="cal-title-icon">📅</span>
+                    <div>
+                        <h4 class="cal-title">Coursework Calendar &amp; Dues</h4>
+                        <span class="cal-subtitle">Deadlines, schedule &amp; study reminders</span>
+                    </div>
+                </div>
+                <div class="cal-nav-group">
+                    <span id="calMonthYearLabel" class="cal-month-label">October 2026</span>
+                    <div class="cal-btn-cluster">
+                        <button type="button" id="calBtnPrev" class="cal-nav-btn" title="Previous Month">‹</button>
+                        <button type="button" id="calBtnToday" class="cal-today-btn" title="Jump to Today">Today</button>
+                        <button type="button" id="calBtnNext" class="cal-nav-btn" title="Next Month">›</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Urgent / Next Due Reminder Banner -->
+            <div id="calReminderBanner" class="cal-reminder-banner-wrapper">
+                <!-- Dynamically populated by calendar.js -->
+            </div>
+
+            <!-- Calendar Days of Week Header -->
+            <div class="cal-weekdays">
+                <span>Sun</span>
+                <span>Mon</span>
+                <span>Tue</span>
+                <span>Wed</span>
+                <span>Thu</span>
+                <span>Fri</span>
+                <span>Sat</span>
+            </div>
+
+            <!-- Calendar Days 7x5/6 Grid -->
+            <div id="calDaysGrid" class="cal-grid">
+                <!-- Dynamically generated days -->
+            </div>
+
+            <!-- Micro Legend -->
+            <div class="cal-legend">
+                <span class="legend-item"><span class="legend-dot dot-urgent"></span> Urgent/Overdue</span>
+                <span class="legend-item"><span class="legend-dot dot-active"></span> Active Due</span>
+                <span class="legend-item"><span class="legend-dot dot-completed"></span> Completed</span>
+                <span class="legend-item"><span class="legend-dot dot-reminder"></span> Study Reminder</span>
+            </div>
+
+            <!-- Selected Date Detail & Study Reminder Drawer -->
+            <div class="cal-day-drawer" id="calDayDrawer">
+                <div class="cal-drawer-header">
+                    <div class="cal-drawer-title-group">
+                        <h5 id="calDayDetailTitle" class="cal-drawer-date">October 19, 2026</h5>
+                        <span id="calDayDuesSummary" class="cal-drawer-summary">0 Dues • 0 Reminders</span>
+                    </div>
+                    <button type="button" id="calBtnQuickAddTask" class="btn btn-primary btn-sm" style="font-size: 0.78rem; padding: 0.25rem 0.65rem;" title="Pre-fill new academic task with this date">
+                        + Log Task For Date
+                    </button>
+                </div>
+
+                <!-- Academic Dues on Selected Date -->
+                <div class="cal-drawer-section">
+                    <span class="cal-section-label">📚 Academic Coursework Dues:</span>
+                    <div id="calDayDuesList" class="cal-task-list">
+                        <!-- Populated by calendar.js -->
+                    </div>
+                </div>
+
+                <!-- Personal Quick Study Reminders on Selected Date -->
+                <div class="cal-drawer-section" style="margin-top: 0.85rem;">
+                    <span class="cal-section-label">📝 Quick Study Reminders:</span>
+                    <div id="calDayRemindersList" class="cal-reminders-list">
+                        <!-- Populated by calendar.js -->
+                    </div>
+
+                    <!-- Add Reminder Inline Form -->
+                    <div class="cal-new-reminder-form">
+                        <input type="text" id="calNewReminderInput" class="cal-reminder-input" placeholder="Add study note or reminder (e.g. read ch 3, bring printout)..." maxlength="120">
+                        <button type="button" id="calBtnAddReminder" class="btn btn-secondary btn-sm" style="white-space:nowrap; font-weight:700;">
+                            + Remind
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Charts Group -->
+        <div class="analytics-charts-group">
+            <!-- Chart 1: Workload by Category -->
+            <div class="chart-card">
+                <div class="chart-card-header">
+                    <span class="chart-card-title">🍩 Workload by Category (Hours)</span>
+                </div>
+                <div class="chart-canvas-wrapper" style="height: 220px;">
+                    <canvas id="chartCategory"></canvas>
+                </div>
+            </div>
+
+            <!-- Chart 2: Urgency Distribution -->
+            <div class="chart-card">
+                <div class="chart-card-header">
+                    <span class="chart-card-title">📊 Urgency Distribution (Count)</span>
+                </div>
+                <div class="chart-canvas-wrapper" style="height: 200px;">
+                    <canvas id="chartUrgency"></canvas>
+                </div>
+            </div>
+
+            <!-- Chart 3: 7-Day Cognitive Load Forecast -->
+            <div class="chart-card">
+                <div class="chart-card-header">
+                    <span class="chart-card-title">📅 7-Day Cognitive Load vs 4.5h Cap</span>
+                </div>
+                <div class="chart-canvas-wrapper" style="height: 220px;">
+                    <canvas id="chartTimeline"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Wins Box -->
+        <div class="quick-wins-card">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span style="font-size: 0.92rem; font-weight: 700; color: var(--text-primary);">
+                    ⚡ Quick Wins (&le; 2 Hours)
+                </span>
+                <span style="font-size: 0.76rem; font-weight: 700; color: var(--secondary); background: var(--secondary-light); padding: 0.15rem 0.5rem; border-radius: var(--radius-pill);">
+                    Boost Momentum
+                </span>
+            </div>
+            <div id="quickWinsContainer">
+                <p style="font-size:0.82rem; color:var(--text-secondary); margin-top:0.4rem;">Scanning schedule...</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal: Add Academic Task -->
+<div id="modalAddTask" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">📖 Log Academic Task</h3>
+            <button type="button" id="btnCloseModal" class="modal-close">&times;</button>
+        </div>
+        <form id="formAddTask">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" for="taskTitle">Task Title *</label>
+                    <input type="text" id="taskTitle" class="form-control" placeholder="e.g. Operating Systems: Semaphore Synchronization Lab" required>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label" for="taskCourseCode">Course Code</label>
+                        <input type="text" id="taskCourseCode" class="form-control" placeholder="e.g. CS204">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="taskCategory">Category *</label>
+                        <select id="taskCategory" class="form-select">
+                            <option value="Assignment">Assignment</option>
+                            <option value="Laboratory Work" selected>Laboratory Work</option>
+                            <option value="Project">Project</option>
+                            <option value="Examination">Examination</option>
+                            <option value="Reading/Quiz">Reading / Quiz</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="taskDeadline">Submission Deadline *</label>
+                    <input type="datetime-local" id="taskDeadline" class="form-control" required>
+                    <div class="form-hint">Used by the heuristic algorithm to calculate time pressure</div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label" for="taskEstimatedHours">Estimated Hours *</label>
+                        <input type="number" id="taskEstimatedHours" class="form-control" step="0.5" min="0.5" max="80" value="4.0" required>
+                        <div class="form-hint">Realistic time required to finish</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="taskDifficulty">Perceived Difficulty (1-5)</label>
+                        <select id="taskDifficulty" class="form-select">
+                            <option value="1">1 - Very Easy (Refresher)</option>
+                            <option value="2">2 - Easy (Standard)</option>
+                            <option value="3" selected>3 - Moderate (Needs focus)</option>
+                            <option value="4">4 - High (Complex topics)</option>
+                            <option value="5">5 - Hard (Capstone / Tough proofs)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="taskDescription">Notes / Key Requirements</label>
+                    <textarea id="taskDescription" class="form-textarea" rows="3" placeholder="Specific deliverables, references, or lab report guidelines..."></textarea>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="btnCancelModal" class="btn btn-secondary btn-sm">Cancel</button>
+                <button type="submit" class="btn btn-primary btn-sm">Save & Prioritize Task</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/analytics.js') }}"></script>
+<script src="{{ url_for('static', filename='js/calendar.js') }}"></script>
+<script src="{{ url_for('static', filename='js/tasks.js') }}"></script>
+{% endblock %}
